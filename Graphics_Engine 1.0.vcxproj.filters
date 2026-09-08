@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Src\SourceCode\Glad\glad.c" />
+    <ClCompile Include="Src\SourceCode\Graphics\Rendering\Window.cpp" />
+    <ClCompile Include="Src\SourceCode\Utils\Logger.cpp" />
+    <ClCompile Include="Src\SourceCode\Exceptions\WindowExceptions.cpp" />
+    <ClCompile Include="Test3D.cpp" />
+    <ClCompile Include="Src\SourceCode\Graphics\Calculations\Vec2.cpp" />
+    <ClCompile Include="Src\SourceCode\Graphics\Color.cpp" />
+    <ClCompile Include="Src\SourceCode\Graphics\Calculations\Color.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\Headers\Graphics\Rendering\Window.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Logger.hpp" />
+    <ClInclude Include="Src\Headers\Exceptions\WindowExceptions.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Rectangle.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Drawable\Shape.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Calculations\Bounds.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Calculations\Vec2.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Calculations\Vec3.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Calculations\Color.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Calculations\Types.hpp" />
+  </ItemGroup>
+</Project>
