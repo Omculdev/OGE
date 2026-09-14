@@ -1,7 +1,7 @@
 #pragma once
 #include "Calculations/2D/RectBounds.hpp"
 #include "Calculations/2D/Point2.hpp"
-#include "Calculations/General/Colorhpp"
+#include "Calculations/General/Color.hpp"
 #include <GLM/glm.hpp>
 template <typename Type>
 class Shape2D {

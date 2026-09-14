@@ -4,10 +4,9 @@
 #include <string>
 #include <Calculations/General/Color.hpp>
 #include <Calculations/2D/Size2.hpp>
-namespace oge {
 	class Window {
 	private:
-		GLFWwindow* window = {};
+		GLFWwindow* window_pointer = {};
 		bool depth_enabled = {};
 		void initGLFW();
 		void basic_create(const UIntSize2& size, const std::string& title, bool enable_depth);
@@ -23,5 +22,6 @@ namespace oge {
 		void create(const UIntSize2& size, const std::string& title, bool enable_depth = false);
 		bool shouldClose() const;
 		void display() const;
+		GLFWwindow* getPointer() const;
+		bool depthEnabled() const;
 	};
-}

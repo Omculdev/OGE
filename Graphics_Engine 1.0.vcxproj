@@ -111,13 +111,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Proj\Include\;$(ProjectDir)\Src\Headers\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\External\Include\;$(ProjectDir)\Src\Headers\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Proj\Static\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\External\Static\</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest>
@@ -149,8 +149,12 @@
   <ItemGroup>
     <ClCompile Include="Src\SourceCode\Exceptions\WindowExceptions.cpp" />
     <ClCompile Include="Src\SourceCode\Glad\glad.c" />
-    <ClCompile Include="Src\SourceCode\Graphics\2D\Calculations\Color.cpp" />
+    <ClCompile Include="Src\SourceCode\Calculations\General\Color.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Renderer.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\BasicShader.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\FragmentShader.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\VertexShader.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Tests.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Window.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\Logger.cpp" />
@@ -170,9 +174,24 @@
     <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Shape2D.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Rectangle.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Calculations\Colors.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Application.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Renderer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\BasicShader.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\FragmentShader.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderProgram.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\VertexShader.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\BasicBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\ElementBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBuffer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Window.hpp" />
-    <ClInclude Include="Src\Headers\Utils\Logger.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Concepts\BufferConcepts.hpp" />
+    <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
+    <ClInclude Include="Src\Headers\Utils\VideoMemory\ElementBufferHandle.hpp" />
+    <ClInclude Include="Src\Headers\Utils\VideoMemory\Vertex.hpp" />
+    <ClInclude Include="Src\Headers\Utils\VideoMemory\VertexBufferHandle.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Graphics_Engine 1.0.slnx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

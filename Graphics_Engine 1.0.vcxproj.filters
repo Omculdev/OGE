@@ -2,24 +2,49 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Src\SourceCode\Glad\glad.c" />
-    <ClCompile Include="Src\SourceCode\Graphics\Rendering\Window.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\Logger.cpp" />
     <ClCompile Include="Src\SourceCode\Exceptions\WindowExceptions.cpp" />
     <ClCompile Include="Test3D.cpp" />
-    <ClCompile Include="Src\SourceCode\Graphics\Calculations\Vec2.cpp" />
-    <ClCompile Include="Src\SourceCode\Graphics\Color.cpp" />
-    <ClCompile Include="Src\SourceCode\Graphics\Calculations\Color.cpp" />
+    <ClCompile Include="Src\SourceCode\Calculations\General\Color.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Renderer.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Tests.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Window.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\BasicShader.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\FragmentShader.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\VertexShader.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Headers\Graphics\Rendering\Window.hpp" />
-    <ClInclude Include="Src\Headers\Utils\Logger.hpp" />
+    <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
     <ClInclude Include="Src\Headers\Exceptions\WindowExceptions.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Rectangle.hpp" />
-    <ClInclude Include="Src\Headers\Graphics\Drawable\Shape.hpp" />
-    <ClInclude Include="Src\Headers\Graphics\Calculations\Bounds.hpp" />
-    <ClInclude Include="Src\Headers\Graphics\Calculations\Vec2.hpp" />
-    <ClInclude Include="Src\Headers\Graphics\Calculations\Vec3.hpp" />
-    <ClInclude Include="Src\Headers\Graphics\Calculations\Color.hpp" />
-    <ClInclude Include="Src\Headers\Graphics\Calculations\Types.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\2D\RectBounds.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\General\Color.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\2D\Point2.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\2D\Segment2.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\2D\Size2.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\General\Types.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\2D\Vec2.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Rectangle.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\3D\Vec3.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Shape2D.hpp" />
+    <ClInclude Include="Src\Headers\Graphics\Calculations\Colors.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Renderer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Window.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Application.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Utils\VideoMemory\Vertex.hpp" />
+    <ClInclude Include="Src\Headers\Utils\VideoMemory\VertexBufferHandle.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\FragmentShader.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderProgram.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\VertexShader.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\BasicShader.hpp" />
+    <ClInclude Include="Src\Headers\Utils\VideoMemory\ElementBufferHandle.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\ElementBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\BasicBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Concepts\BufferConcepts.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Graphics_Engine 1.0.slnx" />
   </ItemGroup>
 </Project>

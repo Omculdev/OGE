@@ -1,21 +1,29 @@
 #pragma once
 #include "Calculations/General/Types.hpp"
 #include "Calculations/General/Color.hpp"
+#include "Graphics/2D/Drawable/Rectangle.hpp"
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.hpp"
+#include "Shaders/VertexShader.hpp"
+#include "Shaders/FragmentShader.hpp"
+#include "Shaders/ShaderProgram.hpp"
+#include "VideoMemory/ElementBuffer.hpp"
+#include "VideoMemory/VertexBuffer.hpp"
 class Renderer {
 private:
-	u32 vertex_buffer_object = 0;
-	u32 element_buffer_object = 0;
-	u32 vertex_array_object		= 0;
-	Color clear_color = {};
-	GLFWwindow* window = {};
+	VertexBuffer vertex_buffer = {};
+	ElementBuffer element_buffer = {};
+	VertexShader vertex_shader = {};
+	FragmentShader fragment_shader = {};
+	ShaderProgram shader_program = {};
+	Window* current_window = {};
 	f32 normalize_color(u8 color) const;
-	void generate_buffers();
-	void generate_vertex_arrays();
 public:
-	Renderer();
-	Renderer(const oge::Window& window);
-	void bindWindow(const oge::Window& window);
+	Renderer() = default;
+	Renderer(Window* window);
+	void bindWindow(Window* window);
 	void clear(const Color& color);
+	template<typename RectType>
+	requires std::is_arithmetic_v<RectType>
+	void draw(Rectangle<RectType>& rect);
 };

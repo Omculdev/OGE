@@ -1,5 +1,5 @@
 #pragma once
-#include "Calculations/Types.hpp"
+#include "Calculations/General/Types.hpp"
 #include <Calculations/2D/Point2.hpp>
 #include <Calculations/2D/Segment2.hpp>
 #include <Calculations/2D/Size2.hpp>
@@ -16,8 +16,8 @@ public:
 	RectBounds& operator=(const RectBounds& other) = default;
 	RectBounds& operator=(RectBounds&& other) noexcept = default;
 	~RectBounds() = default;
-	RectBounds(const Point2<Type>& position, const Size2& size) : position(position), size(size) {}
-	RectBounds(Type positionX, Type positionY, const Size2& size) : position(Point2<Type>(positionX, positionY)), size(size) {}
+	RectBounds(const Point2<Type>& position, const Size2<Type>& size) : position(position), size(size) {}
+	RectBounds(Type positionX, Type positionY, const Size2<Type>& size) : position(Point2<Type>(positionX, positionY)), size(size) {}
 	RectBounds(const Point2<Type>& position, Type width, Type height) : position(position), size(Size2<Type>(width, height)) {}
 	RectBounds(Type positionX, Type positionY, Type width, Type height) : position(Point2<Type>(positionX, positionY)), size(Size2<Type>(width, height)) {}
 	Point2<Type> topLeft() const {

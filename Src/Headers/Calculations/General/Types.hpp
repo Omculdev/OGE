@@ -18,3 +18,6 @@ using f64 = double;
 
 using Degrees = f64;
 using Radians = f64;
+
+using byte = unsigned char;
+
