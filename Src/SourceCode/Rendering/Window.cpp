@@ -1,6 +1,5 @@
-#include "Exceptions/WindowExceptions.hpp"
 #include "Rendering/Window.hpp"
-#include "Utils/Logger.hpp"
+#include "Utils/General/Logger.hpp"
 #include <Calculations/2D/Size2.hpp>
 #include <Calculations/General/Types.hpp>
 #include <GLAD/glad.h>
@@ -9,7 +8,6 @@
 void Window::initGLFW() {
 	if (!glfwInit()) {
 		Logger::getInstance().logFatal("Window::initGLFW: failed to init GLFW");
-		throw WindowException("Window::initGLFW: failed to init GLFW");
 	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -24,12 +22,10 @@ void Window::basic_create(const UIntSize2& size, const std::string& title, bool 
 	window_pointer = glfwCreateWindow(size.width, size.height, title.c_str(), NULL, NULL);
 	if (!window_pointer) {
 		Logger::getInstance().logFatal("Window::basic_create: failed to create window");
-		throw WindowException("Window::basic_create: failed to create window");
 	}
 	glfwMakeContextCurrent(window_pointer);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		Logger::getInstance().logFatal("Window::basic_create: failed to initialize openGL functions");
-		throw WindowException("Window::basic_create: failed to initialize openGL functions");
 	}
 	glfwSetWindowUserPointer(window_pointer, this);
 	glfwSetFramebufferSizeCallback(window_pointer, framebuffer_size_callback);

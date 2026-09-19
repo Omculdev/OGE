@@ -7,8 +7,9 @@ private:
 public:
 	ShaderProgram(const ShaderProgram& other) = delete;
 	ShaderProgram& operator=(const ShaderProgram& other) = delete;
-	ShaderProgram() = default;
+	ShaderProgram();
 	~ShaderProgram();
 	void create(VertexShader& vertexshader, FragmentShader& fragmentshader);
 	void use() const;
+	u32 getGlShaderProgramId() const;
 };

@@ -7,7 +7,7 @@
 template <u32 gl_shader_type>
 class BasicShader {
 private:
-	bool ready = false;
+	boolean ready = false;
 	std::string source = {};
 	u32 gl_shader_id = {};
 	void gen_shader() {
@@ -35,7 +35,7 @@ public:
 		source = src;
 		ready = false;
 	}
-	[[nodiscard]] bool loadFromFile(const std::string& path) {
+	[[nodiscard]] boolean loadFromFile(const std::string& path) {
 		ready = false;
 		std::ifstream inputfile(path);
 		if (!inputfile.is_open()) {
@@ -50,7 +50,7 @@ public:
 		source = sourceacquired;
 		return true;
 	}
-	[[nodiscard]] bool compile() {
+	[[nodiscard]] boolean compile() {
 		ready = false;
 		if (source.empty()) {
 			return false;
@@ -69,7 +69,7 @@ public:
 		ready = true;
 		return true;
 	}
-	bool readyToUse() const {
+	boolean readyToUse() const {
 		return ready;
 	}
 	u32 getGlShaderId() const {

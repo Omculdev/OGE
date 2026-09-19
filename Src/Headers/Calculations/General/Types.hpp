@@ -21,3 +21,4 @@ using Radians = f64;
 
 using byte = unsigned char;
 
+using boolean = bool;

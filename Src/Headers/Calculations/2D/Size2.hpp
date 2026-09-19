@@ -69,16 +69,16 @@ public:
 		height -= amount;
 		assert(height >= 0 && "Size2::makeLonger: change of height caused height to become negative");
 	}
-	bool isZero() const {
+	boolean isZero() const {
 		return width == 0 || height == 0;
 	}
-	bool isValid() const {
+	boolean isValid() const {
 		return width >= 0 && height >= 0;
 	}
-	bool isPositive() const {
+	boolean isPositive() const {
 		return width > 0 && height > 0;
 	}
-	bool isNonZero() const {
+	boolean isNonZero() const {
 		return width != 0 && height != 0;
 	}
 	Type area() const {

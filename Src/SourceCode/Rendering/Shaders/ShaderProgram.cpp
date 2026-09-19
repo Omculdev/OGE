@@ -1,10 +1,12 @@
 #include "Rendering/Shaders/ShaderProgram.hpp"
 #include "GLAD/glad.h"
 #include "Utils/General/Logger.hpp"
-void ShaderProgram::create(VertexShader& vertexshader, FragmentShader& fragmentshader) {
+ShaderProgram::ShaderProgram() {
 	gl_shader_program_id = glCreateProgram();
-	vertexshader.compile();
-	fragmentshader.compile();
+}
+void ShaderProgram::create(VertexShader& vertexshader, FragmentShader& fragmentshader) {
+	boolean vertexshadercompilesuccess = vertexshader.compile();
+	boolean fragmentshadercompilesuccess = fragmentshader.compile();
 	glAttachShader(gl_shader_program_id, vertexshader.getGlShaderId());
 	glAttachShader(gl_shader_program_id, fragmentshader.getGlShaderId());
 	glLinkProgram(gl_shader_program_id);
@@ -26,4 +28,7 @@ ShaderProgram::~ShaderProgram() {
 }
 void ShaderProgram::use() const {
 	glUseProgram(gl_shader_program_id);
+}
+u32 ShaderProgram::getGlShaderProgramId() const {
+	return gl_shader_program_id;
 }

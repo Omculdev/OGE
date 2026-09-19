@@ -56,7 +56,7 @@ public:
 	Segment2<Type> bottom() const {
 		return Segment2(bottomRight(), bottomLeft());
 	}
-	bool intersects(const RectBounds<Type>& other) {
+	boolean intersects(const RectBounds<Type>& other) const {
 		return (!(
 			((topLeft().y < other.bottomLeft().y && topRight().y < other.bottomRight().y) ||
 				(bottomLeft().y > other.topLeft().y && bottomRight().y > other.topRight().y)) &&
@@ -64,7 +64,7 @@ public:
 				(topRight().x < other.topLeft().x && bottomRight().x < other.bottomLeft().x))
 			));
 	}
-	std::optional<RectBounds> getIntersection(const RectBounds<Type>& other) {
+	std::optional<RectBounds> getIntersection(const RectBounds<Type>& other) const {
 		if (
 			((topLeft().y < other.bottomLeft().y && topRight().y < other.bottomRight().y) ||
 				(bottomLeft().y > other.topLeft().y && bottomRight().y > other.topRight().y)) &&
@@ -86,7 +86,7 @@ public:
 		);
 		return intersection;
 	}
-	bool contains(const Point2<Type>& point) {
+	boolean contains(const Point2<Type>& point) const {
 		return point.x >= topLeft().x && point.x <= topRight().x &&
 			point.y >= bottomLeft().y && point.y <= topLeft().y;
 	}
