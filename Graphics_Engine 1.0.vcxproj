@@ -479,6 +479,7 @@
     <ClInclude Include="Src\Headers\Utils\Concepts\BufferConcepts.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\Axes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\DataUsageTypes.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Enums\Keys.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\RectangleVertices.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\ShaderTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\General\IdGenerator.hpp" />
