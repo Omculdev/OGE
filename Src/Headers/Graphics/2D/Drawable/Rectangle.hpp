@@ -152,6 +152,9 @@ public:
 	void setVertexColor(const RectangleVertex& rectanglevertex, const Color& color) {
 		vertex_color[static_cast<usize>(rectanglevertex)] = color;
 	}
+	void setVertexColor(const RectangleVertex& rectanglevertex, u8 r, u8 g, u8 b, u8 a = 255) {
+		vertex_color[static_cast<usize>(rectanglevertex)] = Color(r, g, b, a);
+	}
 	std::optional<RectBounds<Type>> getIntersection(const Rectangle<Type>& other) const {
 		return bounds.getIntersection(other);
 	}

@@ -21,7 +21,7 @@ void Renderer::clear(const Color& color) const {
 }
 void Renderer::create_vertex_array() {
 	vertex_array.addAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 0);
-	vertex_array.addAttributePointer(1, 4, GL_UNSIGNED_BYTE, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 3 * sizeof(f32));
+	vertex_array.addAttributePointer(1, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 3 * sizeof(f32));
 	vertex_array.create(vertex_buffer, element_buffer, GL_DYNAMIC_DRAW);// change later
 }
 [[nodiscard]] boolean Renderer::load_shaders(const ShaderType& shadertype) {
