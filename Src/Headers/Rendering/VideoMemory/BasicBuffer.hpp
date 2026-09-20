@@ -6,14 +6,15 @@
 #include "Utils/General/Logger.hpp"
 #include <cassert>
 #include <GLAD/glad.h>
+#include <iostream>
 template <typename BufferHandleType>
 requires IsBufferHandle<BufferHandleType>
 class BasicBuffer {
 private:
 	u32 gl_basic_buffer_id = {};
 	struct Allocation {
-		u32 size = {};
-		u32 offset = {};
+		usize size = {};
+		usize offset = {};
 		boolean active = {};
 	};
 	usize buffer_size_bytes = {};
@@ -28,12 +29,13 @@ public:
 	BasicBuffer(BasicBuffer&& other) = delete;
 	BasicBuffer& operator=(const BasicBuffer& other) = delete;
 	BasicBuffer& operator=(BasicBuffer&& other) = delete;
-	BasicBuffer() {
+	BasicBuffer() = default;
+	void init() {
 		gen_gl_buffer();
-		buffer_size_bytes = 1024*1024;
+		buffer_size_bytes = 1024 * 1024;
 		data = std::make_unique<byte[]>(buffer_size_bytes);
 	}
-	BasicBuffer(usize sizebytes) {
+	void init(usize sizebytes) {
 		gen_gl_buffer();
 		buffer_size_bytes = sizebytes;
 		data = std::make_unique<byte[]>(buffer_size_bytes);
@@ -53,8 +55,8 @@ public:
 	}
 	void defragmentBuffer() {
 		byte* newdata = new byte[buffer_size_bytes];
-		u32 olddataoffset = 0;
-		u32 newdataoffset = 0;
+		usize olddataoffset = 0;
+		usize newdataoffset = 0;
 		used_size_bytes = 0;
 		for (int currentnodeindex = 0; currentnodeindex < allocations.size(); currentnodeindex++) {
 			auto& currentnode = allocations[currentnodeindex];
@@ -72,6 +74,11 @@ public:
 		data.reset(newdata);
 	}
 	[[nodiscard]] BufferHandleType addElements(usize size, const void* vertices) {
+		if (used_size_bytes + size > buffer_size_bytes) {
+			std::cout << "OVERFLOW: used=" << used_size_bytes
+				<< " size=" << size
+				<< " buffer=" << buffer_size_bytes << "\n";
+		}
 		assert(used_size_bytes + size <= buffer_size_bytes, "BasicBuffer::addElements: exceeded maximum buffer size");
 		Allocation newallocation = {};
 		newallocation.size = size;
@@ -102,7 +109,13 @@ public:
 	u32 getGlBufferId() const {
 		return gl_basic_buffer_id;
 	}
-	u32 getOffset(const BufferHandleType& handle) const {
+	usize getOffset(const BufferHandleType& handle) const {
 		return allocations[handle.index].offset;
+	}
+	usize getBufferSize() const {
+		return buffer_size_bytes;
+	}
+	usize getUsedBufferSize() const {
+		return used_size_bytes;
 	}
 };

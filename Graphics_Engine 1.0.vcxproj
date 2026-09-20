@@ -154,6 +154,7 @@
     <ClCompile Include="Src\SourceCode\Rendering\Renderer.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Tests.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\Application.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArray.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Window.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\General\IdGenerator.cpp" />
@@ -464,6 +465,7 @@
     <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Shape2D.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Rectangle.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Calculations\Colors.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Application.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Renderer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\BasicShader.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\FragmentShader.hpp" />
@@ -476,6 +478,7 @@
     <ClInclude Include="Src\Headers\Rendering\Window.hpp" />
     <ClInclude Include="Src\Headers\Utils\Concepts\BufferConcepts.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\Axes.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Enums\DataUsageTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\RectangleVertices.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\ShaderTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\General\IdGenerator.hpp" />

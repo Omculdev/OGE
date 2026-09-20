@@ -18,7 +18,8 @@ private:
 	void gen_array();
 	void enable_all_attribute_pointers();
 public:
-	VertexArray();
+	VertexArray() = default;
+	void init();
 	~VertexArray();
 	VertexArray(const VertexArray& other) = delete;
 	VertexArray& operator=(const VertexArray& other) = delete;

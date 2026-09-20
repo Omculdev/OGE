@@ -4,9 +4,11 @@
 #include <type_traits>
 class Application {
 private:
-	usize current_window_index = {};
 	std::vector<Window> windows = {};
 	Renderer renderer = {};
+	usize current_window_index = {};
+	boolean first_window_added = {};
+	[[nodiscard]] boolean initGLFW();
 public:
 	Application(); // add more constructors with window params and shader types and dynamic/static draw
 	~Application();
@@ -14,15 +16,16 @@ public:
 	Application& operator=(const Application& other) = delete;
 	Application(Application&& other) = delete;
 	Application operator=(Application& other) = delete;
-	void addWindow(u32 width, u32 height, const std::string& title, boolean enable_depth = false);
-	void addWindow(const UIntSize2& size, const std::string& title, boolean enable_depth = false);
+	boolean addWindow(u32 width, u32 height, const std::string& title, boolean enable_depth = false);
+	boolean addWindow(const UIntSize2& size, const std::string& title, boolean enable_depth = false);
 	template <typename RectType> 
 	requires std::is_arithmetic_v<RectType>
-	void draw(Rectangle<RectType> rectangle) {
+	void draw(const Rectangle<RectType>& rectangle) {
 		renderer.draw(rectangle);
 	}
 	void switchToWindow(usize index);
-	void clearWindow(const Color& color = Color(0,0,0,255)) const;
-	void displayWindow() const;
-	[[nodiscard]] boolean windowShouldClose() const;
+	void clearCurrentWindow(const Color& color = Color(0,0,0,255)) const;
+	void clearCurrentWindow(u8 r, u8 g, u8 b, u8 a = 255) const;
+	void displayCurrentWindow();
+	[[nodiscard]] boolean currentWindowShouldClose() const;
 };

@@ -36,14 +36,15 @@ public:
 	ShaderType shader_type = {};
 	Window* current_window = {};
 	u32 vertex_offset = {};
+	usize vertex_buffer_defragmentation_threshold_bytes = 0;
+	usize element_buffer_defragmentation_threshold_bytes = 0;
 	[[nodiscard]] boolean load_shaders(const ShaderType& shadertype);
 	void create_vertex_array();
 	void load_shaders_and_create_shader_program();
-	template <typename VertexType, usize vertexamount, usize indexamount>
-	requires std::is_arithmetic_v<VertexType>
-	[[nodiscard]] Mesh saveVerticesAndIndeces(const std::array<Vertex<VertexType>, vertexamount>& vertices, const std::array<u32, indexamount>& indeces) {
+	template <usize vertexamount, usize indexamount>
+	[[nodiscard]] Mesh saveVerticesAndIndeces(const std::array<Vertex, vertexamount>& vertices, const std::array<u32, indexamount>& indeces) {
 		Mesh mesh;
-		mesh.vertex_buffer_handle = vertex_buffer.addElements(vertexamount * sizeof(Vertex<VertexType>), vertices.data());
+		mesh.vertex_buffer_handle = vertex_buffer.addElements(vertexamount * sizeof(Vertex), vertices.data());
 		mesh.element_buffer_handle = element_buffer.addElements(indexamount * sizeof(u32), indeces.data());
 		return mesh;
 	}
@@ -57,7 +58,7 @@ public:
 	requires std::is_arithmetic_v<RectType>
 	void saveRectangleDataAndSendToGpu(const Rectangle<RectType>& rectangle) {
 		usize rectanglevertexamount = static_cast<usize>(RectangleVertex::amount);
-		Mesh meshacquired = saveVerticesAndIndeces<RectType, static_cast<usize>(RectangleVertex::amount), 6>(
+		Mesh meshacquired = saveVerticesAndIndeces<static_cast<usize>(RectangleVertex::amount), 6>(
 			rectangle.getFullVertexData(),
 			{
 				0 + vertex_offset,
@@ -76,10 +77,15 @@ public:
 		gpu_objects[rectangle.getId()] = { newelementbufferdata, meshacquired };
 
 	}
+	void init_all_rendering_parts();
+	void update_vertex_buffer();
+	void update_element_buffer();
 public:
-	Renderer();
-	Renderer(const ShaderType& shadertype);
-	Renderer(Window* window);
+	Renderer() = default;
+	void init();
+	void init(const ShaderType& shadertype);
+	void init(Window* window);
+	void init(const ShaderType& shadertype, Window* window);
 	void bindWindow(Window* window);
 	void clear(const Color& color) const;
 	void update(); //defrag buffer

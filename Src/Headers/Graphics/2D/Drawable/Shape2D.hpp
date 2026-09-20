@@ -13,6 +13,7 @@ public:
 	virtual void setFillColor(const Color& color) = 0;
 	virtual void setFillColor(u8 r, u8 g, u8 b, u8 a = 255) = 0;
 	virtual void setSize(const Size2<Type>& size) = 0;
+	virtual void setSize(Type width, Type height) = 0;
 	virtual boolean contains(const Point2<Type>& point) const = 0;
 	virtual boolean intersects(const Shape2D<Type>& shape) const = 0;
 	virtual boolean isSolidColor() const = 0;

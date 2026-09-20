@@ -5,50 +5,40 @@
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
-void Window::initGLFW() {
-	if (!glfwInit()) {
-		Logger::getInstance().logFatal("Window::initGLFW: failed to init GLFW");
-	}
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+Window::Window(Window&& other) noexcept :
+	depth_enabled(other.depth_enabled),
+	window_pointer(other.window_pointer)
+{
+	other.window_pointer = nullptr;
 }
-void Window::basic_create(const UIntSize2& size, const std::string& title, bool enable_depth) {
-	depth_enabled = enable_depth;
-	Logger::getInstance().logInfo("Window::basic_create: attempting to create window with the following params: ");
-	Logger::getInstance().logInfo("Window::basic_create: width: " + std::to_string(size.width));
-	Logger::getInstance().logInfo("Window::basic_create: height: " + std::to_string(size.height));
-	Logger::getInstance().logInfo("Window::basic_create: title: " + title);
-	window_pointer = glfwCreateWindow(size.width, size.height, title.c_str(), NULL, NULL);
-	if (!window_pointer) {
-		Logger::getInstance().logFatal("Window::basic_create: failed to create window");
-	}
-	glfwMakeContextCurrent(window_pointer);
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		Logger::getInstance().logFatal("Window::basic_create: failed to initialize openGL functions");
-	}
-	glfwSetWindowUserPointer(window_pointer, this);
-	glfwSetFramebufferSizeCallback(window_pointer, framebuffer_size_callback);
-	glViewport(0, 0, size.width, size.height);
-
-}
-Window::Window() {
-	initGLFW();
+Window& Window::operator=(Window&& other) noexcept {
+	depth_enabled = other.depth_enabled;
+	window_pointer = other.window_pointer;
+	other.window_pointer = nullptr;
+	return *this;
 }
 Window::~Window() {
-	glfwTerminate();
+	glfwDestroyWindow(window_pointer);
 }
-Window::Window(u32 width, u32 height, const std::string& title, bool enable_depth) {
-	initGLFW();
-	basic_create(UIntSize2(width, height), title, enable_depth);
+void Window::create(const UIntSize2& size, const std::string& title, boolean enabledepth) {
+	depth_enabled = enabledepth;
+	window_pointer = glfwCreateWindow(size.width, size.height, title.c_str(), NULL, NULL);
+	if (!window_pointer) {
+		Logger::getInstance().logWarning("Window::basic_create: failed to create window");
+	}
+	glfwSetWindowUserPointer(window_pointer, this);
+	glfwSetFramebufferSizeCallback(window_pointer, framebuffer_size_callback);;
 }
-void Window::create(const UIntSize2& size, const std::string& title, bool enable_depth) {
-	basic_create(size, title, enable_depth);
+void Window::create(u32 width, u32 height, const std::string& title, boolean enabledepth) {
+	create(UIntSize2(width, height), title, enabledepth);
 }
-void Window::create(u32 width, u32 height, const std::string& title, bool enable_depth) {
-	basic_create(UIntSize2(width, height), title, enable_depth);
+Window::Window(const UIntSize2& size, const std::string& title, boolean enabledepth) {
+	create(size, title, enabledepth);
 }
-bool Window::shouldClose() const {
+Window::Window(u32 width, u32 height, const std::string& title, boolean enabledepth) {
+	create(width, height, title, enabledepth);
+}
+boolean Window::shouldClose() const {
 	return glfwWindowShouldClose(window_pointer);
 }
 void Window::display() const {
@@ -58,6 +48,9 @@ void Window::display() const {
 GLFWwindow* Window::getPointer() const {
 	return window_pointer;
 }
-bool Window::depthEnabled() const {
+boolean Window::depthEnabled() const {
 	return depth_enabled;
+}
+void Window::makeContextCurrent() const {
+	glfwMakeContextCurrent(window_pointer);
 }

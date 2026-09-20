@@ -120,6 +120,9 @@ public:
 	void setSize(const Size2<Type>& size) override final {
 		bounds.size = size;
 	}
+	void setSize(Type width, Type height) override final {
+		bounds.size = Size2<Type>(width, height);
+	}
 	boolean contains(const Point2<Type>& point) const override final {
 		return bounds.contains(point);
 	}
@@ -162,13 +165,13 @@ public:
 		std::array<Point2<Type>, static_cast<usize>(RectangleVertex::amount)> vertices = { bounds.topLeft(), bounds.topRight(), bounds.bottomLeft(), bounds.bottomRight() };
 		return vertices;
 	}
-	std::array<Vertex<Type>, static_cast<usize>(RectangleVertex::amount)> getFullVertexData() const {
+	std::array<Vertex, static_cast<usize>(RectangleVertex::amount)> getFullVertexData() const {
 		const Color& topleftcolor = vertex_color[static_cast<usize>(RectangleVertex::top_left)];
 		const Color& toprightcolor = vertex_color[static_cast<usize>(RectangleVertex::top_right)];
 		const Color& bottomleftcolor = vertex_color[static_cast<usize>(RectangleVertex::bottom_left)];
 		const Color& bottomrightcolor = vertex_color[static_cast<usize>(RectangleVertex::bottom_right)];
-		std::array<Vertex<Type>, static_cast<usize>(RectangleVertex::amount)> fullvertexdata = {
-			Vertex<Type>(
+		std::array<Vertex, static_cast<usize>(RectangleVertex::amount)> fullvertexdata = {
+			Vertex(
 				MathUtils::normalize_position_2d(bounds.topLeft().x,Axis::x),
 				MathUtils::normalize_position_2d(bounds.topLeft().y,Axis::y),
 				0,
@@ -177,7 +180,7 @@ public:
 				MathUtils::normalize_color(topleftcolor.b),
 				MathUtils::normalize_color(topleftcolor.a)
 			),
-			Vertex<Type>(
+			Vertex(
 				MathUtils::normalize_position_2d(bounds.topRight().x,Axis::x),
 				MathUtils::normalize_position_2d(bounds.topRight().y,Axis::y),
 				0,
@@ -186,7 +189,7 @@ public:
 				MathUtils::normalize_color(toprightcolor.b),
 				MathUtils::normalize_color(toprightcolor.a)
 			),
-			Vertex<Type>(
+			Vertex(
 				MathUtils::normalize_position_2d(bounds.bottomLeft().x,Axis::x),
 				MathUtils::normalize_position_2d(bounds.bottomLeft().y,Axis::y),
 				0,
@@ -195,7 +198,7 @@ public:
 				MathUtils::normalize_color(bottomleftcolor.b),
 				MathUtils::normalize_color(bottomleftcolor.a)
 			),
-			Vertex<Type>(
+			Vertex(
 				MathUtils::normalize_position_2d(bounds.bottomRight().x,Axis::x),
 				MathUtils::normalize_position_2d(bounds.bottomRight().y,Axis::y),
 				0,

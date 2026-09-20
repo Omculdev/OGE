@@ -7,7 +7,7 @@
 void VertexArray::gen_array() {
 	glGenVertexArrays(1, &gl_vertex_array_id);
 }
-VertexArray::VertexArray() {
+void VertexArray::init() {
 	gen_array();
 }
 VertexArray::~VertexArray() {

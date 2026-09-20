@@ -1,8 +1,11 @@
 #include "Rendering/Shaders/ShaderProgram.hpp"
 #include "GLAD/glad.h"
 #include "Utils/General/Logger.hpp"
-ShaderProgram::ShaderProgram() {
+void ShaderProgram::gen_program() {
 	gl_shader_program_id = glCreateProgram();
+}
+void ShaderProgram::init() {
+	gen_program();
 }
 void ShaderProgram::create(VertexShader& vertexshader, FragmentShader& fragmentshader) {
 	boolean vertexshadercompilesuccess = vertexshader.compile();

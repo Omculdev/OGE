@@ -16,20 +16,21 @@ private:
 public:
 	BasicShader(const BasicShader& other) = delete;
 	BasicShader& operator=(const BasicShader& other) = delete;
-	BasicShader() {
-		gen_shader();
-		ready = false;
-	}
-	BasicShader(const std::string& src) {
-		gen_shader();
-		source = src;
-		ready = false;
-	}
+	BasicShader() = default;
 	~BasicShader() {
 		if (gl_shader_id == 0) {
 			return;
 		}
 		glDeleteShader(gl_shader_id);
+	}
+	void init() {
+		gen_shader();
+		ready = false;
+	}
+	void init(const std::string& src) {
+		gen_shader();
+		source = src;
+		ready = false;
 	}
 	void setSource(const std::string& src) {
 		source = src;
