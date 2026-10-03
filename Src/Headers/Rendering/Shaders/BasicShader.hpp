@@ -32,6 +32,15 @@ public:
 		source = src;
 		ready = false;
 	}
+	void reset() {
+		if (gl_shader_id != 0) {
+			glDeleteShader(gl_shader_id);
+			gl_shader_id = 0;
+		}
+		source = {};
+		ready = false;
+		gl_shader_id = glCreateShader(gl_shader_type);
+	}
 	void setSource(const std::string& src) {
 		source = src;
 		ready = false;

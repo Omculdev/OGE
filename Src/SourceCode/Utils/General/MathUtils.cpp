@@ -1,4 +1,4 @@
-	#include "Utils/General/MathUtils.hpp"
+#include "Utils/Calculations/MathUtils.hpp"
 #include <GLAD/glad.h>
 #include <algorithm>
 #include <cassert>

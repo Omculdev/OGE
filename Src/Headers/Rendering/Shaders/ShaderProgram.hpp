@@ -11,7 +11,8 @@ public:
 	ShaderProgram() = default;
 	~ShaderProgram();
 	void init();
-	void create(VertexShader& vertexshader, FragmentShader& fragmentshader);
+	[[nodiscard]] boolean create(VertexShader& vertexshader, FragmentShader& fragmentshader);
+	void reset();
 	void use() const;
 	u32 getGlShaderProgramId() const;
 };

@@ -73,12 +73,22 @@ public:
 		used_size_bytes = newdataoffset;
 		data.reset(newdata);
 	}
-	[[nodiscard]] BufferHandleType addElements(usize size, const void* vertices) {
-		if (used_size_bytes + size > buffer_size_bytes) {
-			std::cout << "OVERFLOW: used=" << used_size_bytes
-				<< " size=" << size
-				<< " buffer=" << buffer_size_bytes << "\n";
-		}
+	template <typename ElementType>
+	[[nodiscard]] BufferHandleType addElements(const std::vector<ElementType>& vertices, boolean active = true) {
+		usize newitemsizebytes = vertices.size() * sizeof(ElementType);
+		assert(used_size_bytes + newitemsizebytes <= buffer_size_bytes, "BasicBuffer::addElements: exceeded maximum buffer size");
+		Allocation newallocation = {};
+		newallocation.size = newitemsizebytes;
+		newallocation.active = active;
+		newallocation.offset = used_size_bytes;
+		memcpy(data.get() + newallocation.offset, vertices.data(), newitemsizebytes);
+		used_size_bytes += newallocation.size;
+		BufferHandleType newallocationhandle = {};
+		newallocationhandle.index = allocations.size(); // implicitly last index + 1
+		allocations.push_back(newallocation);
+		return newallocationhandle;
+	}
+	[[nodiscard]] BufferHandleType addBytes(usize size, const void* vertices) {
 		assert(used_size_bytes + size <= buffer_size_bytes, "BasicBuffer::addElements: exceeded maximum buffer size");
 		Allocation newallocation = {};
 		newallocation.size = size;

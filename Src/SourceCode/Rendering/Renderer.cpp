@@ -24,51 +24,18 @@ void Renderer::create_vertex_array() {
 	vertex_array.addAttributePointer(1, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 3 * sizeof(f32));
 	vertex_array.create(vertex_buffer, element_buffer, GL_DYNAMIC_DRAW);// change later
 }
-[[nodiscard]] boolean Renderer::load_shaders(const ShaderType& shadertype) {
-	shader_type = shadertype;
-	switch (shadertype) {
-	case ShaderType::none:
-		return false;
-	case ShaderType::amount:
-		return false;
-	case ShaderType::no_rotate_2D:
-		if (!vertex_shader.loadFromFile("Src/Shaders/NoRotate2DVertexShader.glsl")) {
-			Logger::getInstance().logWarning("Renderer::load_shaders: failed to load vertex shader from: Src/Shaders/NoRotate2DVertexShader.glsl");
-			return false;
-		}
-		if (!fragment_shader.loadFromFile("Src/Shaders/NoRotate2DFragmentShader.glsl")) {
-			Logger::getInstance().logWarning("Renderer::load_shaders failed to load fragment shader from: Src/Shaders/NoRotate2DFragmentShader.glsl");
-			return false;
-		}
-		return true;
-	default:
-		return false; // will add more shaders later
-	}
-}
-
-void Renderer::load_shaders_and_create_shader_program() {
-	if (!load_shaders(shader_type)) {
-		Logger::getInstance().logWarning("Renderer::load_shaders_and_create_shader_program: failed to load one or multiple shaders");
-	}
-	shader_program.create(vertex_shader, fragment_shader);
-}
-void Renderer::setShaderType(const ShaderType& shadertype) {
-	shader_type = shadertype;
-}
-void Renderer::init_all_rendering_parts() {
+void Renderer::init_members() {
 	vertex_array.init();
 	vertex_buffer.init();
 	element_buffer.init();
-	vertex_shader.init();
-	fragment_shader.init();
-	shader_program.init();
+	shader_orchestrator.init();
 }
 void Renderer::init() {
-	init_all_rendering_parts();
+	init_members();
 	vertex_buffer_defragmentation_threshold_bytes = 1024;
 	element_buffer_defragmentation_threshold_bytes = 1024;
-	shader_type = ShaderType::no_rotate_2D;
-	load_shaders_and_create_shader_program();
+	shader_orchestrator.setShaderType(ShaderType::no_rotate_2D);
+	shader_orchestrator.loadCurrentShaderAndCreateShaderProgram();
 	create_vertex_array();
 }
 void Renderer::init(Window* window) {
@@ -79,14 +46,6 @@ void Renderer::init(Window* window) {
 	if (window->depthEnabled()) {
 		glEnable(GL_DEPTH_TEST);
 	}
-}
-void Renderer::init(const ShaderType& shadertype) {
-	init();
-	shader_type = shadertype;
-}
-void Renderer::init(const ShaderType& shadertype, Window* window) {
-	init(window);
-	shader_type = shadertype;
 }
 void Renderer::update_vertex_buffer() {
 	if (vertex_buffer.getBufferSize() - vertex_buffer.getUsedBufferSize() >= vertex_buffer_defragmentation_threshold_bytes) {

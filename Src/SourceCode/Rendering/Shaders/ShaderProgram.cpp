@@ -7,7 +7,7 @@ void ShaderProgram::gen_program() {
 void ShaderProgram::init() {
 	gen_program();
 }
-void ShaderProgram::create(VertexShader& vertexshader, FragmentShader& fragmentshader) {
+[[nodiscard]] boolean ShaderProgram::create(VertexShader& vertexshader, FragmentShader& fragmentshader) {
 	boolean vertexshadercompilesuccess = vertexshader.compile();
 	boolean fragmentshadercompilesuccess = fragmentshader.compile();
 	glAttachShader(gl_shader_program_id, vertexshader.getGlShaderId());
@@ -21,10 +21,18 @@ void ShaderProgram::create(VertexShader& vertexshader, FragmentShader& fragments
 		Logger::getInstance().logWarning("ShaderProgram::ShaderProgram: failed to link shader program: " + std::string(logdata));
 		glDeleteProgram(gl_shader_program_id);
 		gl_shader_program_id = 0;
-		return;
+		return false;
 	}
 	glDetachShader(gl_shader_program_id, vertexshader.getGlShaderId());
 	glDetachShader(gl_shader_program_id, fragmentshader.getGlShaderId());
+	return true;
+}
+void ShaderProgram::reset() {
+	if (gl_shader_program_id != 0) {
+		glDeleteProgram(gl_shader_program_id);
+		gl_shader_program_id = 0;
+	}
+	gl_shader_program_id = glCreateProgram();
 }
 ShaderProgram::~ShaderProgram() {
 	glDeleteProgram(gl_shader_program_id);

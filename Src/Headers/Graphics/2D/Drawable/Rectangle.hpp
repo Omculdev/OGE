@@ -1,7 +1,7 @@
 #pragma once
 #include "Shape2D.hpp"
 #include "Utils/Enums/RectangleVertices.hpp"
-#include "Utils/VideoMemory/Vertex.hpp"
+#include "Utils/Rendering/VideoMemory/Vertex.hpp"
 #include <Calculations/2D/Point2.hpp>
 #include <Calculations/2D/RectBounds.hpp>
 #include <Calculations/2D/Size2.hpp>
@@ -13,32 +13,31 @@
 #include <array>
 #include <optional>
 #include <type_traits>
-#include "Utils/VideoMemory/Mesh.hpp"
-#include "Utils/General/IdGenerator.hpp"
-#include "Utils/General/MathUtils.hpp"
+#include "Utils/Rendering/VideoMemory/Mesh.hpp"
+#include "Utils/Calculations/RectangleIdGenerator.hpp"
+#include "Utils/Calculations/MathUtils.hpp"
 template<typename Type>
 requires std::is_arithmetic_v<Type>
 class Rectangle : public Shape2D<Type> {
 private:
-	static inline IdGenerator id_generator = {};
 	glm::mat4 transform = glm::mat4(1.0f);
 	std::array<Color, static_cast<usize>(RectangleVertex::amount)> vertex_color;
 	RectBounds<Type> bounds = {};
 	u32 id = {};
 public:
-	Rectangle() : id(id_generator.assignId()) {}
+	Rectangle() : id(RectangleIdGenerator::assignId()) {}
 	Rectangle(const Rectangle& other) :
 		bounds(other.bounds),
 		transform(other.transform),
 		vertex_color(other.vertex_color),
-		id(id_generator.assignId())
+		id(RectangleIdGenerator::assignId())
 	{}
 	Rectangle& operator=(const Rectangle& other) {
 		if (this == &other) return *this;
 		bounds = other.bounds;
 		transform = other.transform;
 		vertex_color = other.vertex_color;
-		id = id_generator.assignId();
+		id = RectangleIdGenerator::assignId();
 		return *this;
 	}
 	Rectangle(Rectangle&& other) noexcept  :
@@ -64,20 +63,18 @@ public:
 		const Color& color = Color(255, 255, 255, 255)
 	) :
 		bounds(position, size),
-		vertex_color{ color, color, color, color }
-	{
-		id = id_generator.assignId();
-	}
+		vertex_color{ color, color, color, color },
+		id(RectangleIdGenerator::assignId())
+	{}
 	Rectangle(
 		Type sizeX, Type sizeY,
 		const Point2<Type>& position = Point2<Type>(0, 0),
 		const Color& color = Color(255, 255, 255, 255)
 	) :
 		bounds(position, Size2(sizeX, sizeY)),
-		vertex_color{ color, color, color, color }
-	{
-		id = id_generator.assignId();
-	}
+		vertex_color{ color, color, color, color },
+		id(RectangleIdGenerator::assignId())
+	{}
 	Rectangle(
 		Type sizeX,
 		Type sizeY,
@@ -86,10 +83,9 @@ public:
 		const Color& color = Color(255, 255, 255, 255)
 	) :
 		bounds(Point2(positionX, positionY), Size2(sizeX, sizeY)),
-		vertex_color{ color, color, color, color }
-	{
-		id = id_generator.assignId();
-	}
+		vertex_color{ color, color, color, color },
+		id(RectangleIdGenerator::assignId())
+	{}
 	Rectangle(
 		Type sizeX,
 		Type sizeY,
@@ -98,10 +94,9 @@ public:
 		u8 r = 0, u8 g = 0, u8 b = 0, u8 a = 255
 	) :
 		bounds(Point2(positionX, positionY), Size2(sizeX, sizeY)),
-		vertex_color({ Color(r,g,b,a),Color(r,g,b,a),Color(r,g,b,a),Color(r,g,b,a) })
-	{
-		id = id_generator.assignId();
-	}
+		vertex_color({ Color(r,g,b,a),Color(r,g,b,a),Color(r,g,b,a),Color(r,g,b,a) }),
+		id(RectangleIdGenerator::assignId())
+	{}
 	~Rectangle() {
 		id = 0;
 	}

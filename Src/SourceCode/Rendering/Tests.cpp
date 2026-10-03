@@ -9,7 +9,7 @@ int main() {
     testrect.setVertexColor(RectangleVertex::bottom_right, 0, 0, 255);
     testrect.setVertexColor(RectangleVertex::bottom_left, 255, 255, 0);
     testrect.setSize(500, 500);
-    IntRectangle testrect2;
+    FloatRectangle testrect2;
     testrect2.setPosition(700, 500);
     testrect2.setVertexColor(RectangleVertex::top_left, 255, 0, 0);
     testrect2.setVertexColor(RectangleVertex::top_right, 0, 255, 0);

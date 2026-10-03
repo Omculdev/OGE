@@ -1,6 +1,6 @@
 #pragma once
-#include "Utils/VideoMemory/ElementBufferHandle.hpp"
-#include "Utils/VideoMemory/VertexBufferHandle.hpp"
+#include "Utils/Rendering/VideoMemory/ElementBufferHandle.hpp"
+#include "Utils/Rendering/VideoMemory/VertexBufferHandle.hpp"
 #include <type_traits>
 #include <concepts>
 template <typename Type>

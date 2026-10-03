@@ -1,6 +1,6 @@
 #pragma once
-#include "Utils/VideoMemory/VertexBufferHandle.hpp"
-#include "Utils/VideoMemory/ElementBufferHandle.hpp"
+#include "Utils/Rendering/VideoMemory/VertexBufferHandle.hpp"
+#include "Utils/Rendering/VideoMemory/ElementBufferHandle.hpp"
 class Mesh {
 public:
 	ElementBufferHandle element_buffer_handle = {};

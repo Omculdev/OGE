@@ -4,17 +4,15 @@
 #include "Graphics/2D/Drawable/Rectangle.hpp"
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.hpp"
-#include "Shaders/VertexShader.hpp"
-#include "Shaders/FragmentShader.hpp"
-#include "Shaders/ShaderProgram.hpp"
+#include "Shaders/ShaderOrchestator.hpp"
 #include "VideoMemory/ElementBuffer.hpp"
 #include "VideoMemory/VertexBuffer.hpp"
 #include "VideoMemory/VertexArray.hpp"
-#include "Utils/Enums/ShaderTypes.hpp"
 #include "Utils/Enums/Axes.hpp"
 #include <array>
 #include <unordered_map>
-#include "Utils/VideoMemory/Mesh.hpp"
+#include "Utils/Rendering/VideoMemory/Mesh.hpp"
+#include "Utils/Rendering/VideoMemory/Vertex.hpp"
 #include <iostream>
 class Renderer {
 public:
@@ -27,25 +25,24 @@ public:
 		Mesh mesh;
 	};
 	std::unordered_map<u32, GpuObject> gpu_objects = {};
+	// new class 1
 	VertexArray vertex_array = {};
 	VertexBuffer vertex_buffer = {};
 	ElementBuffer element_buffer = {};
-	VertexShader vertex_shader = {};
-	FragmentShader fragment_shader = {};
-	ShaderProgram shader_program = {};
-	ShaderType shader_type = {};
+	// new class 1
+	//new class 2
+	ShaderOrchestrator shader_orchestrator = {};
+	//new class 2
 	Window* current_window = {};
 	u32 vertex_offset = {};
 	usize vertex_buffer_defragmentation_threshold_bytes = 0;
 	usize element_buffer_defragmentation_threshold_bytes = 0;
-	[[nodiscard]] boolean load_shaders(const ShaderType& shadertype);
 	void create_vertex_array();
-	void load_shaders_and_create_shader_program();
 	template <usize vertexamount, usize indexamount>
 	[[nodiscard]] Mesh saveVerticesAndIndeces(const std::array<Vertex, vertexamount>& vertices, const std::array<u32, indexamount>& indeces) {
 		Mesh mesh;
-		mesh.vertex_buffer_handle = vertex_buffer.addElements(vertexamount * sizeof(Vertex), vertices.data());
-		mesh.element_buffer_handle = element_buffer.addElements(indexamount * sizeof(u32), indeces.data());
+		mesh.vertex_buffer_handle = vertex_buffer.addBytes(vertexamount * sizeof(Vertex), vertices.data());
+		mesh.element_buffer_handle = element_buffer.addBytes(indexamount * sizeof(u32), indeces.data());
 		return mesh;
 	}
 	void sendLastAcquiredDataToGpu() {
@@ -77,19 +74,16 @@ public:
 		gpu_objects[rectangle.getId()] = { newelementbufferdata, meshacquired };
 
 	}
-	void init_all_rendering_parts();
+	void init_members();
 	void update_vertex_buffer();
 	void update_element_buffer();
 public:
 	Renderer() = default;
 	void init();
-	void init(const ShaderType& shadertype);
 	void init(Window* window);
-	void init(const ShaderType& shadertype, Window* window);
 	void bindWindow(Window* window);
 	void clear(const Color& color) const;
 	void update(); //defrag buffer
-	void setShaderType(const ShaderType& shadertype);
 	template<typename RectType>
 	requires std::is_arithmetic_v<RectType>
 	void draw(const Rectangle<RectType>& rectangle) {
@@ -98,7 +92,7 @@ public:
 			saveRectangleDataAndSendToGpu(rectangle);
 			it = gpu_objects.find(rectangle.getId());
 		}
-		shader_program.use();
+		shader_orchestrator.useShaderProgram();
 		glBindVertexArray(vertex_array.getGlVertexArrayId());
 		glDrawElements(
 			GL_TRIANGLES,

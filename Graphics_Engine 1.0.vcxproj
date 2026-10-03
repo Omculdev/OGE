@@ -152,12 +152,12 @@
     <ClCompile Include="Src\SourceCode\Glad\glad.c" />
     <ClCompile Include="Src\SourceCode\Calculations\General\Color.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Renderer.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Tests.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\Application.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArray.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Window.cpp" />
-    <ClCompile Include="Src\SourceCode\Utils\General\IdGenerator.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\General\Logger.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\General\MathUtils.cpp" />
     <ClCompile Include="Test3D.cpp" />
@@ -469,6 +469,7 @@
     <ClInclude Include="Src\Headers\Rendering\Renderer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\BasicShader.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\FragmentShader.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderOrchestator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderProgram.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\VertexShader.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\BasicBuffer.hpp" />
@@ -476,19 +477,22 @@
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexArray.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBuffer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Window.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Calculations\RectangleIdGenerator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Concepts\BufferConcepts.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\Axes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\DataUsageTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\Keys.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\RectangleVertices.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\ShaderTypes.hpp" />
-    <ClInclude Include="Src\Headers\Utils\General\IdGenerator.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Calculations\BasicIdGenerator.hpp" />
     <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
-    <ClInclude Include="Src\Headers\Utils\General\MathUtils.hpp" />
-    <ClInclude Include="Src\Headers\Utils\VideoMemory\ElementBufferHandle.hpp" />
-    <ClInclude Include="Src\Headers\Utils\VideoMemory\Mesh.hpp" />
-    <ClInclude Include="Src\Headers\Utils\VideoMemory\Vertex.hpp" />
-    <ClInclude Include="Src\Headers\Utils\VideoMemory\VertexBufferHandle.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Calculations\MathUtils.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderDescriptor.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderLibrary.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\ElementBufferHandle.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\Mesh.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\Vertex.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\VertexBufferHandle.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Graphics_Engine 1.0.slnx" />

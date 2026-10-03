@@ -52,6 +52,7 @@ void Application::displayCurrentWindow() {
 }
 void Application::switchToWindow(usize index) {
 	windows[current_window_index].makeContextCurrent();
+	current_window_index = index;
 }
 [[nodiscard]] boolean Application::currentWindowShouldClose() const {
 	return windows[current_window_index].shouldClose();
