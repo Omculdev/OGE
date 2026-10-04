@@ -19,24 +19,26 @@ void Renderer::clear(const Color& color) const {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 }
-void Renderer::create_vertex_array() {
+void Renderer::create_vertex_array(u32 usage) {
 	vertex_array.addAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 0);
 	vertex_array.addAttributePointer(1, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 3 * sizeof(f32));
-	vertex_array.create(vertex_buffer, element_buffer, GL_DYNAMIC_DRAW);// change later
+	vertex_array.create(vertex_buffer, element_buffer, usage);// change later
 }
 void Renderer::init_members() {
 	vertex_array.init();
-	vertex_buffer.init();
-	element_buffer.init();
+	buffer_orchestrator.init();
 	shader_orchestrator.init();
 }
 void Renderer::init() {
 	init_members();
 	vertex_buffer_defragmentation_threshold_bytes = 1024;
 	element_buffer_defragmentation_threshold_bytes = 1024;
-	shader_orchestrator.setShaderType(ShaderType::no_rotate_2D);
-	shader_orchestrator.loadCurrentShaderAndCreateShaderProgram();
-	create_vertex_array();
+	shader_orchestrator.setShaderType(ShaderType::no_rotate_2D);  // remove later
+	if (!shader_orchestrator.loadCurrentShaderAndCreateShaderProgram()) {
+		Logger::getInstance().logWarning("Renderer::init: failed to link shader program");
+		return;
+	}
+	create_vertex_array(GL_DYNAMIC_DRAW);
 }
 void Renderer::init(Window* window) {
 	init();
@@ -47,17 +49,6 @@ void Renderer::init(Window* window) {
 		glEnable(GL_DEPTH_TEST);
 	}
 }
-void Renderer::update_vertex_buffer() {
-	if (vertex_buffer.getBufferSize() - vertex_buffer.getUsedBufferSize() >= vertex_buffer_defragmentation_threshold_bytes) {
-		vertex_buffer.defragmentBuffer();
-	}
-}
-void Renderer::update_element_buffer() {
-	if (element_buffer.getBufferSize() - element_buffer.getUsedBufferSize() >= element_buffer_defragmentation_threshold_bytes) {
-		element_buffer.defragmentBuffer();
-	}
-}
 void Renderer::update() {
-	update_vertex_buffer();
-	update_element_buffer();
+	buffer_orchestrator.updateBuffers();
 }

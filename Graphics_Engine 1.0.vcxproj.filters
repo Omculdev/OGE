@@ -5,7 +5,7 @@
     <ClCompile Include="Test3D.cpp" />
     <ClCompile Include="Src\SourceCode\Calculations\General\Color.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Renderer.cpp" />
-    <ClCompile Include="Src\SourceCode\Rendering\Tests.cpp" />
+    <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Window.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
     <ClCompile Include="External\Include\GLM\detail\glm.cpp" />
@@ -15,6 +15,9 @@
     <ClCompile Include="Src\SourceCode\Utils\General\Logger.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\General\MathUtils.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderOrchestrator.cpp" />
+    <ClCompile Include="TextureTest.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\BufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
@@ -347,6 +350,10 @@
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderOrchestator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderDescriptor.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderLibrary.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\BufferOrchestrator.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBufferOrchestrator.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Enums\VertexBufferTypes.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Graphics_Engine 1.0.slnx" />

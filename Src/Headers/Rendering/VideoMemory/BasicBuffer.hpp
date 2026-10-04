@@ -21,15 +21,40 @@ private:
 	usize used_size_bytes = {};
 	std::unique_ptr<byte[]> data = {};
 	std::vector<Allocation> allocations = {};
+	boolean needs_defragmentation = {};
 	void gen_gl_buffer() {
 		glGenBuffers(1, &gl_basic_buffer_id);
 	}
 public:
-	BasicBuffer(const BasicBuffer& other) = delete;
-	BasicBuffer(BasicBuffer&& other) = delete;
-	BasicBuffer& operator=(const BasicBuffer& other) = delete;
-	BasicBuffer& operator=(BasicBuffer&& other) = delete;
 	BasicBuffer() = default;
+	BasicBuffer(const BasicBuffer& other) = delete;
+	BasicBuffer& operator=(const BasicBuffer& other) = delete;
+	BasicBuffer(BasicBuffer&& other) noexcept :
+		gl_basic_buffer_id(other.gl_basic_buffer_id),
+		buffer_size_bytes(other.buffer_size_bytes),
+		used_size_bytes(other.used_size_bytes),
+		data(std::move(other.data)),
+		allocations(std::move(other.allocations))
+	{
+		other.gl_basic_buffer_id = 0;
+		other.buffer_size_bytes = 0;
+		other.used_size_bytes = 0;
+	}
+	BasicBuffer& operator=(BasicBuffer&& other) noexcept {
+		if (this == &other) return *this;
+		if (gl_basic_buffer_id != 0) {
+			glDeleteBuffers(1, &gl_basic_buffer_id);
+		}
+		gl_basic_buffer_id = other.gl_basic_buffer_id;
+		buffer_size_bytes = other.buffer_size_bytes;
+		used_size_bytes = other.used_size_bytes;
+		data = std::move(other.data);
+		allocations = std::move(other.allocations);
+		other.gl_basic_buffer_id = 0;
+		other.buffer_size_bytes = 0;
+		other.used_size_bytes = 0;
+		return *this;
+	}
 	void init() {
 		gen_gl_buffer();
 		buffer_size_bytes = 1024 * 1024;
@@ -41,7 +66,9 @@ public:
 		data = std::make_unique<byte[]>(buffer_size_bytes);
 	}
 	~BasicBuffer() {
-		glDeleteBuffers(1, &gl_basic_buffer_id);
+		if (gl_basic_buffer_id != 0) {
+			glDeleteBuffers(1, &gl_basic_buffer_id);
+		}
 	}
 	void increaseBufferSize(usize byteamount) {
 		if (byteamount < buffer_size_bytes) {
@@ -72,6 +99,15 @@ public:
 		}
 		used_size_bytes = newdataoffset;
 		data.reset(newdata);
+		needs_defragmentation = false;
+	}
+	void sendEverythingToGpu(u32 target) {
+		if (used_size_bytes == 0) {
+			Logger::getInstance().logWarning("BasicBuffer::sendEverythingToGpu: attempted to send 0 bytes to gpu");
+			return;
+		}
+		glBindBuffer(target, gl_basic_buffer_id);
+		glBufferSubData(target, 0, used_size_bytes, data.get());
 	}
 	template <typename ElementType>
 	[[nodiscard]] BufferHandleType addElements(const std::vector<ElementType>& vertices, boolean active = true) {
@@ -101,8 +137,9 @@ public:
 		allocations.push_back(newallocation);
 		return newallocationhandle;
 	}
-	void deleteVertices(const BufferHandleType& handle) {
+	void deleteElements(const BufferHandleType& handle) {
 		allocations[handle.index].active = false;
+		needs_defragmentation = true;
 	}
 	void allocateGpuMemory(u32 target, u32 usage) const {
 		if (buffer_size_bytes == 0) {
@@ -112,7 +149,7 @@ public:
 		glBindBuffer(target, gl_basic_buffer_id);
 		glBufferData(target, buffer_size_bytes, NULL, usage);
 	}
-	void sendDataToGpu(u32 target, u32 usage) {
+	void sendDataToGpu(u32 target) {
 		glBindBuffer(target, gl_basic_buffer_id);
 		glBufferSubData(target, allocations.back().offset, allocations.back().size, data.get() + allocations.back().offset);
 	}
@@ -127,5 +164,8 @@ public:
 	}
 	usize getUsedBufferSize() const {
 		return used_size_bytes;
+	}
+	boolean needsDefragmentation() const {
+		return needs_defragmentation;
 	}
 };

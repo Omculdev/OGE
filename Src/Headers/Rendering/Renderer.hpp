@@ -5,14 +5,11 @@
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.hpp"
 #include "Shaders/ShaderOrchestator.hpp"
-#include "VideoMemory/ElementBuffer.hpp"
-#include "VideoMemory/VertexBuffer.hpp"
+#include "Rendering/VideoMemory/BufferOrchestrator.hpp"
 #include "VideoMemory/VertexArray.hpp"
 #include "Utils/Enums/Axes.hpp"
 #include <array>
 #include <unordered_map>
-#include "Utils/Rendering/VideoMemory/Mesh.hpp"
-#include "Utils/Rendering/VideoMemory/Vertex.hpp"
 #include <iostream>
 class Renderer {
 public:
@@ -25,32 +22,12 @@ public:
 		Mesh mesh;
 	};
 	std::unordered_map<u32, GpuObject> gpu_objects = {};
-	// new class 1
-	VertexArray vertex_array = {};
-	VertexBuffer vertex_buffer = {};
-	ElementBuffer element_buffer = {};
-	// new class 1
-	//new class 2
+	BufferOrchestrator buffer_orchestrator = {};
 	ShaderOrchestrator shader_orchestrator = {};
-	//new class 2
+	VertexArray vertex_array = {};
 	Window* current_window = {};
 	u32 vertex_offset = {};
-	usize vertex_buffer_defragmentation_threshold_bytes = 0;
-	usize element_buffer_defragmentation_threshold_bytes = 0;
-	void create_vertex_array();
-	template <usize vertexamount, usize indexamount>
-	[[nodiscard]] Mesh saveVerticesAndIndeces(const std::array<Vertex, vertexamount>& vertices, const std::array<u32, indexamount>& indeces) {
-		Mesh mesh;
-		mesh.vertex_buffer_handle = vertex_buffer.addBytes(vertexamount * sizeof(Vertex), vertices.data());
-		mesh.element_buffer_handle = element_buffer.addBytes(indexamount * sizeof(u32), indeces.data());
-		return mesh;
-	}
-	void sendLastAcquiredDataToGpu() {
-		glBindVertexArray(vertex_array.getGlVertexArrayId());
-		vertex_buffer.sendDataToGpu(GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
-		element_buffer.sendDataToGpu(GL_ELEMENT_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
-		glBindVertexArray(0);
-	}
+	void create_vertex_array(u32 usage);
 	template<typename RectType>
 	requires std::is_arithmetic_v<RectType>
 	void saveRectangleDataAndSendToGpu(const Rectangle<RectType>& rectangle) {

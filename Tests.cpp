@@ -22,4 +22,5 @@ int main() {
         test.draw(testrect2);
         test.displayCurrentWindow();
     }
+    return 0;
 }

@@ -154,13 +154,16 @@
     <ClCompile Include="Src\SourceCode\Rendering\Renderer.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
-    <ClCompile Include="Src\SourceCode\Rendering\Tests.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\BufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
+    <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\Application.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArray.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Window.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\General\Logger.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\General\MathUtils.cpp" />
     <ClCompile Include="Test3D.cpp" />
+    <ClCompile Include="TextureTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\Include\GLM\common.hpp" />
@@ -473,9 +476,12 @@
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderProgram.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\VertexShader.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\BasicBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\BufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\ElementBuffer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexArray.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBuffer.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Window.hpp" />
     <ClInclude Include="Src\Headers\Utils\Calculations\RectangleIdGenerator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Concepts\BufferConcepts.hpp" />
@@ -485,6 +491,7 @@
     <ClInclude Include="Src\Headers\Utils\Enums\RectangleVertices.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\ShaderTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Calculations\BasicIdGenerator.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Enums\VertexBufferTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
     <ClInclude Include="Src\Headers\Utils\Calculations\MathUtils.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderDescriptor.hpp" />

@@ -13,6 +13,7 @@ private:
 		usize stride = {};
 		usize shift = {};
 		boolean normalized = {};
+		boolean enabled = {};
 	};
 	std::vector<AttributePointer> attribute_pointers = {};
 	void gen_array();
@@ -23,7 +24,7 @@ public:
 	~VertexArray();
 	VertexArray(const VertexArray& other) = delete;
 	VertexArray& operator=(const VertexArray& other) = delete;
-	void addAttributePointer(u32 layout, usize size, u32 type, boolean normalized, usize stride, usize shift);
-	void create(const VertexBuffer& vertexbuffer, const ElementBuffer& elementbuffer, u32 datausage);
+	void addAttributePointer(u32 layout, usize size, u32 type, boolean normalized, usize stride, usize shift, boolean enabled = true);
+	void create(u32 datausage);
 	u32 getGlVertexArrayId() const;
 };
