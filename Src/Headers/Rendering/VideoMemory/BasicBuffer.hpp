@@ -68,6 +68,7 @@ public:
 	~BasicBuffer() {
 		if (gl_basic_buffer_id != 0) {
 			glDeleteBuffers(1, &gl_basic_buffer_id);
+			gl_basic_buffer_id = 0;
 		}
 	}
 	void increaseBufferSize(usize byteamount) {
@@ -100,6 +101,16 @@ public:
 		used_size_bytes = newdataoffset;
 		data.reset(newdata);
 		needs_defragmentation = false;
+	}
+	void clear() {
+		if (gl_basic_buffer_id != 0) {
+			glDeleteBuffers(1, &gl_basic_buffer_id);
+			gl_basic_buffer_id = 0;
+		}
+		buffer_size_bytes = 0;
+		used_size_bytes = 0;
+		data.reset();
+		allocations.clear();
 	}
 	void sendEverythingToGpu(u32 target) {
 		if (used_size_bytes == 0) {

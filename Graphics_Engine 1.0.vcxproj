@@ -155,6 +155,7 @@
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderProgram.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\BufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\Application.cpp" />
@@ -475,6 +476,8 @@
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderOrchestator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderProgram.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\VertexShader.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Calculations\VertexArrayElementBufferIdGenerator.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\AttributePointer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\BasicBuffer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\BufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\ElementBuffer.hpp" />
@@ -499,6 +502,7 @@
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\ElementBufferHandle.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\Mesh.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\Vertex.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\VertexArrayElementBufferHandle.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\VertexBufferHandle.hpp" />
   </ItemGroup>
   <ItemGroup>

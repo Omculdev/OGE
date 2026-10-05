@@ -18,6 +18,7 @@
     <ClCompile Include="TextureTest.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\BufferOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
@@ -354,6 +355,9 @@
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\VertexBufferTypes.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\VertexArrayElementBufferHandle.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\AttributePointer.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Calculations\VertexArrayElementBufferIdGenerator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Graphics_Engine 1.0.slnx" />
