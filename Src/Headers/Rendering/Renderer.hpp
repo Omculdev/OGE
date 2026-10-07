@@ -5,7 +5,8 @@
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.hpp"
 #include "Shaders/ShaderOrchestator.hpp"
-#include "Rendering/VideoMemory/BufferOrchestrator.hpp"
+#include "Rendering/VideoMemory/VertexBufferOrchestrator.hpp"
+#include "Rendering/VideoMemory/VertexArrayElementBufferOrchestrator.hpp"
 #include "VideoMemory/VertexArray.hpp"
 #include "Utils/Enums/Axes.hpp"
 #include <array>
@@ -22,7 +23,8 @@ public:
 		Mesh mesh;
 	};
 	std::unordered_map<u32, GpuObject> gpu_objects = {};
-	BufferOrchestrator buffer_orchestrator = {};
+	VertexBufferOrchestrator buffer_orchestrator = {};
+	VertexArrayElementBufferOrchestrator vertex_array_element_buffer_orchestrator = {};
 	ShaderOrchestrator shader_orchestrator = {};
 	VertexArray vertex_array = {};
 	Window* current_window = {};
@@ -52,8 +54,6 @@ public:
 
 	}
 	void init_members();
-	void update_vertex_buffer();
-	void update_element_buffer();
 public:
 	Renderer() = default;
 	void init();

@@ -1,6 +1,3 @@
 #pragma once
-#include "Calculations/General/Types.hpp"
-class VertexBufferHandle {
-public:
-	usize index = {};
-};
+#include "Utils/General/BasicHandle.hpp"
+using VertexBufferHandle = BasicHandle<u32>;

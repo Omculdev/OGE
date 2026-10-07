@@ -16,9 +16,10 @@
     <ClCompile Include="Src\SourceCode\Utils\General\MathUtils.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\Shaders\ShaderOrchestrator.cpp" />
     <ClCompile Include="TextureTest.cpp" />
-    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\BufferOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\DrawHandler.cpp" />
+    <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />
@@ -346,18 +347,20 @@
     <ClInclude Include="Src\Headers\Utils\Enums\ShaderTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Calculations\BasicIdGenerator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Calculations\MathUtils.hpp" />
-    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\Mesh.hpp" />
     <ClInclude Include="Src\Headers\Utils\Calculations\RectangleIdGenerator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderOrchestator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderDescriptor.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\Shaders\ShaderLibrary.hpp" />
-    <ClInclude Include="Src\Headers\Rendering\VideoMemory\BufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexBufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.hpp" />
     <ClInclude Include="Src\Headers\Utils\Enums\VertexBufferTypes.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\VertexArrayElementBufferHandle.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\AttributePointer.hpp" />
-    <ClInclude Include="Src\Headers\Utils\Calculations\VertexArrayElementBufferIdGenerator.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\DrawHandler.hpp" />
+    <ClInclude Include="Src\Headers\Utils\General\BasicHandle.hpp" />
+    <ClInclude Include="Src\Headers\Rendering\VideoMemory\ResourceManager.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\ResourceHandle.hpp" />
+    <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\AttributePointerHandle.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Graphics_Engine 1.0.slnx" />

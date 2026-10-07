@@ -7,13 +7,16 @@
 #include <unordered_map>
 class VertexArrayElementBufferOrchestrator {
 private:
-	std::vector<boolean> disabled_ids;
-	std::vector<usize> element_buffer_defragmentation_sizes = {};
-	std::vector<VertexArray> vertex_arrays = {};
-	std::vector<ElementBuffer> element_buffers = {};
-	void init_initial_vertex_array();
-	void init_initial_element_buffer(u32 initialelementbufferusage);
+	struct VertexArrayElementBufferData {
+		boolean enabled = {};
+		usize defragmentation_threshold = {};
+		VertexArray vertex_array = {};
+		ElementBuffer element_buffer = {};
+	};
+	std::vector<usize> free_indices = {};
+	std::vector<VertexArrayElementBufferData> data = {};
 	void init_members(u32 initialelementbufferusage);
+	// rework for usage with new attrib pointers
 public:
 	VertexArrayElementBufferOrchestrator() = default;
 	VertexArrayElementBufferOrchestrator(const VertexArrayElementBufferOrchestrator& other) = delete;
@@ -28,9 +31,28 @@ public:
 		boolean vertexarrayenabled = true,
 		const std::vector<AttributePointer>& attributepointers = {}
 	);
-	void deleteVertexArrayElementBuffer(const VertexArrayElementBufferHandle& vertexarrayelementbufferhandle);
+	template <typename IndexType>
+	[[nodiscard]] std::optional<ElementBufferHandle> saveElementDataAndSendToGpu(
+		const VertexArrayElementBufferHandle& vertexarrayelementbufferhandle,
+		const std::vector<IndexType>& indeces,
+		boolean active = true
+	) {
+		if (!vertexarrayelementbufferhandle.isValid()) {
+			Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::saveElementDataAndSendToGpu: attempted to send data to using an invalid handle");
+			return std::nullopt;
+		}
+		ElementBufferHandle newelementbufferhandle;
+		glBindVertexArray(data[vertexarrayelementbufferhandle.getIdValue()].vertex_array.getGlVertexArrayId());
+		newelementbufferhandle = data[vertexarrayelementbufferhandle.getIdValue()].element_buffer.addElements(indeces, active);
+		data[vertexarrayelementbufferhandle.getIdValue()].element_buffer.sendDataToGpu(newelementbufferhandle, GL_ELEMENT_ARRAY_BUFFER);
+		glBindVertexArray(0);
+		return newelementbufferhandle;
+	}
+	void deleteVertexArrayElementBuffer(VertexArrayElementBufferHandle& vertexarrayelementbufferhandle);
 	void enableVertexArray(const VertexArrayElementBufferHandle& vertexarrayelementbufferhandle);
 	void disableVertexArray(const VertexArrayElementBufferHandle& vertexarrayelementbufferhandle);
+	void addAttributePointer(const VertexArrayElementBufferHandle& vertexarrayelementbufferhandle, const AttributePointer& attributepointer);
+	void deleteAttributePointer(const VertexArrayElementBufferHandle& vertexarrayelementbufferhandle);
 	void update();
 	[[nodiscard]] VertexArrayElementBufferHandle getInitialHandle() const;
 };

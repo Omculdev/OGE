@@ -20,7 +20,7 @@ public:
 	VertexBufferOrchestrator& operator=(VertexBufferOrchestrator&& other) noexcept;
 	void init(u32 staticalbufferusage = GL_STATIC_DRAW, u32 dynamicalbufferusage = GL_DYNAMIC_DRAW);
 	template <typename DataType>
-	[[nodiscard]] std::optional<VertexBufferHandle> saveDataAndSendToGpu(
+	[[nodiscard]] std::optional<VertexBufferHandle> saveVertexDataAndSendToGpu(
 		const std::vector<DataType>& data,
 		const VertexBufferType& vertexbuffertype = VertexBufferType::dynamical,
 		boolean active = true
@@ -33,11 +33,11 @@ public:
 			return std::nullopt;
 		case VertexBufferType::statical:
 			datahandle = statical_vertex_buffer.addElements<DataType>(data, active);
-			statical_vertex_buffer.sendDataToGpu(GL_ARRAY_BUFFER);
+			statical_vertex_buffer.sendDataToGpu(datahandle, GL_ARRAY_BUFFER);
 			break;
 		case VertexBufferType::dynamical:
 			datahandle = dynamical_vertex_buffer.addElements<DataType>(data, active);
-			dynamical_vertex_buffer.sendDataToGpu(GL_ARRAY_BUFFER);
+			dynamical_vertex_buffer.sendDataToGpu(datahandle, GL_ARRAY_BUFFER);
 			break;
 		default:
 			return std::nullopt;

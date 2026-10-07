@@ -8,4 +8,5 @@ public:
 	usize stride = {};
 	usize shift = {};
 	boolean normalized = {};
+	boolean enabled = {};
 };
