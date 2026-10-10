@@ -18,7 +18,7 @@ public:
 	VertexArray& operator=(VertexArray&& other) noexcept;
 	void init();
 	~VertexArray();
-	[[nodiscard]] AttributePointerHandle addAttributePointer(AttributePointer attributepointer); // copy intended
+	[[nodiscard]] AttributePointerHandle addAttributePointer(const AttributePointer& attributepointer); // copy intended
 	[[nodiscard]] AttributePointerHandle addAttributePointer(
 		u32 layout, 
 		usize size, 
@@ -28,6 +28,7 @@ public:
 		usize shift,
 		boolean enabled = true
 	);
+	void deleteAttributePointer(AttributePointerHandle& attributepointerhadnle);
 	void enableAttributePointer(const AttributePointerHandle& attributepointerhandle);
 	void disableAttributePointer(const AttributePointerHandle& attributepointerhandle);
 	void enableAllAttributePointers();

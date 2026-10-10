@@ -36,6 +36,9 @@ public:
 		id = otherid;
 	}
 	void invalidate() {
+		if (!id.has_value()) {
+			return;
+		}
 		id = std::nullopt;
 	}
 	auto operator<=>(const BasicHandle& other) const = default;

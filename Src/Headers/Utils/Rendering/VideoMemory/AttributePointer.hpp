@@ -9,4 +9,5 @@ public:
 	usize shift = {};
 	boolean normalized = {};
 	boolean enabled = {};
+	boolean active = true;
 };

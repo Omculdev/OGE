@@ -37,13 +37,13 @@ VertexArray::~VertexArray() {
 	AttributePointerHandle attributepointerhandle;
 	if (free_indeces.empty()) {
 		attributepointerhandle.setId(attribute_pointers.size()); // implicitly last index + 1
-		attribute_pointers.push_back(std::move(attributepointer));
+		attribute_pointers.push_back(attributepointer);
 	}
 	else {
 		usize freeindex = free_indeces.back();
 		free_indeces.pop_back();
 		attributepointerhandle.setId(freeindex);
-		attribute_pointers[freeindex] = std::move(attributepointer);
+		attribute_pointers[freeindex] = attributepointer;
 	}
 	glBindVertexArray(gl_vertex_array_id);
 	glVertexAttribPointer(
@@ -80,6 +80,7 @@ VertexArray::~VertexArray() {
 	newattributepointer.stride = stride;
 	newattributepointer.shift = shift;
 	newattributepointer.enabled = enabled;
+	newattributepointer.active = true;
 	return addAttributePointer(newattributepointer);
 }
 void VertexArray::enableAllAttributePointers() {
@@ -96,9 +97,13 @@ void VertexArray::disableAllAttributePointers() {
 	}
 	glBindVertexArray(0);
 }
-void VertexArray::enableAttributePointer(AttributePointerHandle attributepointerhandle) {
+void VertexArray::enableAttributePointer(const AttributePointerHandle& attributepointerhandle) {
 	if (!attributepointerhandle.isValid()) {
 		Logger::getInstance().logWarning("VertexArray::enableAttributePointer: attempted to data via an invalid handle");
+		return;
+	}
+	if (!attribute_pointers[attributepointerhandle.getIdValue()].active) {
+		Logger::getInstance().logWarning("VertexArray::enableAttributePointer attempted to access a deleted or invalid attribute pointer");
 		return;
 	}
 	attribute_pointers[attributepointerhandle.getIdValue()].enabled = true;
@@ -109,6 +114,10 @@ void VertexArray::enableAttributePointer(AttributePointerHandle attributepointer
 void VertexArray::disableAttributePointer(const AttributePointerHandle& attributepointerhandle) {
 	if (!attributepointerhandle.isValid()) {
 		Logger::getInstance().logWarning("VertexArray::disableAttributePointer: attempted to data via an invalid handle");
+		return;
+	}
+	if (!attribute_pointers[attributepointerhandle.getIdValue()].active) {
+		Logger::getInstance().logWarning("VertexArray::disableAttributePointer attempted to access a deleted or invalid attribute pointer");
 		return;
 	}
 	attribute_pointers[attributepointerhandle.getIdValue()].enabled = false;
@@ -123,6 +132,15 @@ void VertexArray::clear() {
 	}
 	attribute_pointers.clear();
 	free_indeces.clear();
+}
+void VertexArray::deleteAttributePointer(AttributePointerHandle& attributepointerhandle) {
+	if (!attribute_pointers[attributepointerhandle.getIdValue()].active) {
+		Logger::getInstance().logWarning("VertexArray::deleteAttributePointer: attempted to delete an already deleted or invalid attribute pointer");
+		return;
+	}
+	disableAttributePointer(attributepointerhandle);
+	free_indeces.push_back(attributepointerhandle.getIdValue());
+	attributepointerhandle.invalidate();
 }
 u32 VertexArray::getGlVertexArrayId() const {
 	return gl_vertex_array_id;

@@ -13,7 +13,6 @@
 #include <array>
 #include <optional>
 #include <type_traits>
-#include "Utils/Rendering/VideoMemory/Mesh.hpp"
 #include "Utils/Calculations/RectangleIdGenerator.hpp"
 #include "Utils/Calculations/MathUtils.hpp"
 template<typename Type>
@@ -144,6 +143,16 @@ public:
 		if (!isSolidColor()) return std::nullopt;
 		else return vertex_color[static_cast<usize>(RectangleVertex::top_left)];
 	}
+	template <typename CopyType>
+	requires std::is_arithmetic_v<CopyType>
+	Rectangle<CopyType> perfectCopy() const {
+		Rectangle<CopyType> copyrectangle;
+		copyrectangle.bounds = bounds;
+		copyrectangle.vertex_color = vertex_color;
+		copyrectangle.transform = transform;
+		copyrectangle.id = id;
+		return copyrectangle;
+	}
 	void setVertexColor(const RectangleVertex& rectanglevertex, const Color& color) {
 		vertex_color[static_cast<usize>(rectanglevertex)] = color;
 	}
@@ -151,7 +160,7 @@ public:
 		vertex_color[static_cast<usize>(rectanglevertex)] = Color(r, g, b, a);
 	}
 	std::optional<RectBounds<Type>> getIntersection(const Rectangle<Type>& other) const {
-		return bounds.getIntersection(other);
+		return bounds.getIntersection(other.bounds);
 	}
 	Color getVertexColor(const RectangleVertex& rectanglevertex) const {
 		return vertex_color[static_cast<usize>(rectanglevertex)];
