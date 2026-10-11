@@ -14,15 +14,24 @@ private:
 	};
 	std::vector<usize> free_indices = {};
 	std::vector<VertexArrayElementBufferData> data = {};
-	void init_members(u32 initialelementbufferusage);
-	// rework for usage with new attrib pointers
+	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle init_members(
+		u32 initialelementbufferusage,
+		usize initialelementbuffersizebytes,
+		usize initialelementbufferdefragmentationthresholdbytes,
+		const std::vector<AttributePointer>& attributepointers
+	);
 public:
 	VertexArrayElementBufferOrchestrator() = default;
 	VertexArrayElementBufferOrchestrator(const VertexArrayElementBufferOrchestrator& other) = delete;
 	VertexArrayElementBufferOrchestrator& operator=(const VertexArrayElementBufferOrchestrator& other) = delete;
 	VertexArrayElementBufferOrchestrator(VertexArrayElementBufferOrchestrator&& other) noexcept;
 	VertexArrayElementBufferOrchestrator& operator=(VertexArrayElementBufferOrchestrator&& other) noexcept;
-	void init(u32 initialelementbufferusage = GL_DYNAMIC_DRAW);
+	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle init(
+		usize initialelementbuffersizebytes = 1024 * 1024,
+		usize initialelementbufferdefragmentationthresholdbytesu32 = 800 * 1024,
+		u32 initialelementbufferusage = GL_DYNAMIC_DRAW,
+		const std::vector<AttributePointer>& attributepointers = {}
+	);
 	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle addVertexArrayElementBuffer(
 		usize elementbuffersize = 1024 * 1024,
 		usize elementbufferdefragmentationsize = 800 * 1024,
@@ -35,7 +44,7 @@ public:
 		const std::vector<IndexType>& indeces,
 		boolean active = true
 	) {
-		if (!vertexarrayelementbufferattributepointerhandle.isValid()) {
+		if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
 			Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::saveElementDataAndSendToGpu: attempted to send data to using an invalid handle");
 			return std::nullopt;
 		}
@@ -65,5 +74,4 @@ public:
 	void enableAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex);
 	void disableAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex);
 	void update();
-	[[nodiscard]] VertexArrayElementBufferHandle getInitialHandle() const;
 };

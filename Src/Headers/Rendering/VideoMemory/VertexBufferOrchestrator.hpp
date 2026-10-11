@@ -10,7 +10,12 @@ private:
 	VertexBuffer dynamical_vertex_buffer = {};
 	usize dynamical_buffer_defragmentation_threshold_bytes = {};
 	usize statical_buffer_defragmentation_threshold_bytes = {};
-	void init_members();
+	void init_members(
+		usize staticalbuffersizebytes,
+		usize dynamicalbuffersizebytes,
+		usize staticalbufferdefragmentationthresholdbytes,
+		usize dynamicalbufferdefragmentationthresholdbytes
+	);
 	void defragment_buffer_and_send_to_gpu(VertexBuffer& buffer, usize defragmentationthreshold);
 public:
 	VertexBufferOrchestrator() = default;
@@ -18,7 +23,14 @@ public:
 	VertexBufferOrchestrator& operator=(const VertexBufferOrchestrator& other) = delete;
 	VertexBufferOrchestrator(VertexBufferOrchestrator&& other) noexcept;
 	VertexBufferOrchestrator& operator=(VertexBufferOrchestrator&& other) noexcept;
-	void init(u32 staticalbufferusage = GL_STATIC_DRAW, u32 dynamicalbufferusage = GL_DYNAMIC_DRAW);
+	void init(
+		usize staticalbuffersizebytes = 1024 * 1024,
+		usize dynamicalbuffersizebytes = 1024 * 1024,
+		usize staticalbufferdefragmentationthresholdbytes = 800 * 1024,
+		usize dynamicalbufferdefragmentationthresholdbytes = 800 * 1024,
+		u32 staticalbufferusage = GL_STATIC_DRAW,
+		u32 dynamicalbufferusage = GL_DYNAMIC_DRAW
+	);
 	template <typename DataType>
 	[[nodiscard]] std::optional<VertexBufferHandle> saveVertexDataAndSendToGpu(
 		const std::vector<DataType>& data,

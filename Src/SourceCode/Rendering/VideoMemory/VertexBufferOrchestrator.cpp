@@ -13,15 +13,32 @@ VertexBufferOrchestrator& VertexBufferOrchestrator::operator=(VertexBufferOrches
 	dynamical_buffer_defragmentation_threshold_bytes = other.dynamical_buffer_defragmentation_threshold_bytes;
 	return *this;
 }
-void VertexBufferOrchestrator::init_members() {
+void VertexBufferOrchestrator::init_members(
+	usize staticalbuffersizebytes,
+	usize dynamicalbuffersizebytes, 
+	usize staticalbufferdefragmentationthresholdbytes,
+	usize dynamicalbufferdefragmentationthresholdbytes
+) {
 	// change all values later
-	statical_vertex_buffer.init(1024 * 1024);
-	dynamical_vertex_buffer.init(1024 * 1024);
-	statical_buffer_defragmentation_threshold_bytes = 800 * 1024;
-	dynamical_buffer_defragmentation_threshold_bytes = 800 * 1024;
+	statical_vertex_buffer.init(staticalbuffersizebytes);
+	dynamical_vertex_buffer.init(dynamicalbuffersizebytes);
+	statical_buffer_defragmentation_threshold_bytes = staticalbufferdefragmentationthresholdbytes;
+	dynamical_buffer_defragmentation_threshold_bytes = dynamicalbufferdefragmentationthresholdbytes;
 }
-void VertexBufferOrchestrator::init(u32 staticalbufferusage, u32 dynamicalbufferusage) {
-	init_members();
+void VertexBufferOrchestrator::init(
+	usize staticalbuffersizebytes,
+	usize dynamicalbuffersizebytes,
+	usize staticalbufferdefragmentationthresholdbytes,
+	usize dynamicalbufferdefragmentationthresholdbytes,
+	u32 staticalbufferusage, 
+	u32 dynamicalbufferusage
+) {
+	init_members(
+		staticalbuffersizebytes,
+		dynamicalbuffersizebytes,
+		staticalbufferdefragmentationthresholdbytes,
+		dynamicalbufferdefragmentationthresholdbytes
+	);
 	statical_vertex_buffer.allocateGpuMemory(GL_ARRAY_BUFFER, staticalbufferusage);
 	dynamical_vertex_buffer.allocateGpuMemory(GL_ARRAY_BUFFER, dynamicalbufferusage);
 }

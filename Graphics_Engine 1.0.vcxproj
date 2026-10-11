@@ -158,6 +158,7 @@
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\ResourceManager.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Utils\Rendering\VideoMemory\ResourceHandle.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\Rendering\VideoMemory\VertexArrayElementBufferAttributePointerHandle.cpp" />
     <ClCompile Include="Tests.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\Application.cpp" />

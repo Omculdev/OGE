@@ -21,6 +21,7 @@
     <ClCompile Include="Src\SourceCode\Rendering\DrawHandler.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\ResourceManager.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\Rendering\VideoMemory\VertexArrayElementBufferAttributePointerHandle.cpp" />
+    <ClCompile Include="Src\SourceCode\Utils\Rendering\VideoMemory\ResourceHandle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Headers\Utils\General\Logger.hpp" />

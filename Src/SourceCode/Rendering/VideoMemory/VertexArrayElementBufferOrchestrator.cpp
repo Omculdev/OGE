@@ -1,27 +1,4 @@
 #include "Rendering/VideoMemory/VertexArrayElementBufferOrchestrator.hpp"
-void VertexArrayElementBufferOrchestrator::init_members(u32 initialelementbufferusage) {
-	VertexArrayElementBufferData newvertexarrayelementbufferdata = {};
-	newvertexarrayelementbufferdata.vertex_array.init();
-	glBindVertexArray(newvertexarrayelementbufferdata.vertex_array.getGlVertexArrayId());
-	newvertexarrayelementbufferdata.element_buffer.init(1024 * 1024); // change value later
-	newvertexarrayelementbufferdata.element_buffer.allocateGpuMemory(GL_ELEMENT_ARRAY_BUFFER, initialelementbufferusage);
-	glBindVertexArray(0);
-	newvertexarrayelementbufferdata.defragmentation_threshold = 800 * 1024; // change value later
-	data.push_back(std::move(newvertexarrayelementbufferdata));
-}
-void VertexArrayElementBufferOrchestrator::init(u32 initialelementbufferusage) {
-	init_members(initialelementbufferusage);
-}
-VertexArrayElementBufferOrchestrator::VertexArrayElementBufferOrchestrator(VertexArrayElementBufferOrchestrator&& other) noexcept : 
-	data(std::move(other.data)),
-	free_indices(std::move(other.free_indices))
-{}
-VertexArrayElementBufferOrchestrator& VertexArrayElementBufferOrchestrator::operator=(VertexArrayElementBufferOrchestrator&& other) noexcept {
-	if (this == &other) return *this;
-	data = std::move(other.data);
-	free_indices = std::move(other.free_indices);
-	return *this;
-}
 [[nodiscard]] VertexArrayElementBufferAttributePointerHandle VertexArrayElementBufferOrchestrator::addVertexArrayElementBuffer(
 	usize elementbuffersize,
 	usize elementbufferdefragmentationsize,
@@ -29,7 +6,7 @@ VertexArrayElementBufferOrchestrator& VertexArrayElementBufferOrchestrator::oper
 	const std::vector<AttributePointer>& attributepointers
 ) {
 	VertexArrayElementBufferData newvertexarrayelementbufferdata = {};
-	VertexArrayElementBufferAttributePointerHandle newvertexarrayelementbufferattributepointerhandle;
+	VertexArrayElementBufferAttributePointerHandle newvertexarrayelementbufferattributepointerhandle = {};
 	newvertexarrayelementbufferdata.vertex_array.init();
 	glBindVertexArray(newvertexarrayelementbufferdata.vertex_array.getGlVertexArrayId());
 	newvertexarrayelementbufferdata.element_buffer.init(elementbuffersize);
@@ -51,6 +28,42 @@ VertexArrayElementBufferOrchestrator& VertexArrayElementBufferOrchestrator::oper
 		newvertexarrayelementbufferattributepointerhandle.setVertexArrayElementBufferHandleId(freeindex);
 	}
 	return newvertexarrayelementbufferattributepointerhandle;
+}
+[[nodiscard]] VertexArrayElementBufferAttributePointerHandle VertexArrayElementBufferOrchestrator::init_members(
+	u32 initialelementbufferusage,
+	usize initialelementbuffersizebytes,
+	usize initialelementbufferdefragmentationthresholdbytes,
+	const std::vector<AttributePointer>& attributepointers
+) {
+	return addVertexArrayElementBuffer(
+		initialelementbuffersizebytes,
+		initialelementbufferdefragmentationthresholdbytes,
+		initialelementbufferusage,
+		attributepointers
+	);
+}
+[[nodiscard]] VertexArrayElementBufferAttributePointerHandle VertexArrayElementBufferOrchestrator::init(
+	usize initialelementbuffersizebytes,
+	usize initialelementbufferdefragmentationthresholdbytes,
+	u32 initialelementbufferusage,
+	const std::vector<AttributePointer>& attributepointers
+) {
+	return init_members(
+		initialelementbufferusage,
+		initialelementbuffersizebytes,
+		initialelementbufferdefragmentationthresholdbytes,
+		attributepointers
+	);
+}
+VertexArrayElementBufferOrchestrator::VertexArrayElementBufferOrchestrator(VertexArrayElementBufferOrchestrator&& other) noexcept : 
+	data(std::move(other.data)),
+	free_indices(std::move(other.free_indices))
+{}
+VertexArrayElementBufferOrchestrator& VertexArrayElementBufferOrchestrator::operator=(VertexArrayElementBufferOrchestrator&& other) noexcept {
+	if (this == &other) return *this;
+	data = std::move(other.data);
+	free_indices = std::move(other.free_indices);
+	return *this;
 }
 void VertexArrayElementBufferOrchestrator::deleteVertexArrayElementBuffer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle) {
 	if (vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue() == 0) {
@@ -147,15 +160,10 @@ void VertexArrayElementBufferOrchestrator::enableAttributePointer(VertexArrayEle
 }
 void VertexArrayElementBufferOrchestrator::disableAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex) {
 	if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
-		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::diableAttributePointer: attempted to access data via an invalid handle");
+		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::disbleAttributePointer: attempted to access data via an invalid handle");
 		return;
 	}
 	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
 	AttributePointerHandle& attributepointerhandle = vertexarrayelementbufferattributepointerhandle.getAttributePointerHandle(handleindex);
 	data[id].vertex_array.disableAttributePointer(attributepointerhandle);
-}
-[[nodiscard]] VertexArrayElementBufferHandle VertexArrayElementBufferOrchestrator::getInitialHandle() const {
-	VertexArrayElementBufferHandle initialvertexarrayelementbufferhandle;
-	initialvertexarrayelementbufferhandle.setId(0);
-	return initialvertexarrayelementbufferhandle;
 }
