@@ -1,104 +1,55 @@
 #pragma once
-#include "Calculations/General/Types.hpp"
 #include "Calculations/General/Color.hpp"
 #include "Graphics/2D/Drawable/Rectangle.hpp"
 #include <GLFW/glfw3.h>
 #include "Rendering/Window.hpp"
 #include "Shaders/ShaderOrchestator.hpp"
-#include "VideoMemory/ElementBuffer.hpp"
-#include "VideoMemory/VertexBuffer.hpp"
+#include "Rendering/VideoMemory/ResourceManager.hpp"
 #include "VideoMemory/VertexArray.hpp"
-#include "Utils/Enums/Axes.hpp"
-#include <array>
-#include <unordered_map>
-#include "Utils/Rendering/VideoMemory/Mesh.hpp"
-#include "Utils/Rendering/VideoMemory/Vertex.hpp"
-#include <iostream>
+#include "Rendering/DrawHandler.hpp"
 class Renderer {
-public:
-	struct GpuObject {
-		struct ElementBufferData {
-			usize element_buffer_offset_bytes = {};
-			usize element_buffer_size_bytes = {};
-		};
-		ElementBufferData element_buffer_data;
-		Mesh mesh;
-	};
-	std::unordered_map<u32, GpuObject> gpu_objects = {};
-	// new class 1
-	VertexArray vertex_array = {};
-	VertexBuffer vertex_buffer = {};
-	ElementBuffer element_buffer = {};
-	// new class 1
-	//new class 2
+private:
 	ShaderOrchestrator shader_orchestrator = {};
-	//new class 2
+	ResourceManager resource_manager = {};
+	DrawHandler draw_handler = {};
 	Window* current_window = {};
-	u32 vertex_offset = {};
-	usize vertex_buffer_defragmentation_threshold_bytes = 0;
-	usize element_buffer_defragmentation_threshold_bytes = 0;
-	void create_vertex_array();
-	template <usize vertexamount, usize indexamount>
-	[[nodiscard]] Mesh saveVerticesAndIndeces(const std::array<Vertex, vertexamount>& vertices, const std::array<u32, indexamount>& indeces) {
-		Mesh mesh;
-		mesh.vertex_buffer_handle = vertex_buffer.addBytes(vertexamount * sizeof(Vertex), vertices.data());
-		mesh.element_buffer_handle = element_buffer.addBytes(indexamount * sizeof(u32), indeces.data());
-		return mesh;
-	}
-	void sendLastAcquiredDataToGpu() {
-		glBindVertexArray(vertex_array.getGlVertexArrayId());
-		vertex_buffer.sendDataToGpu(GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
-		element_buffer.sendDataToGpu(GL_ELEMENT_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
-		glBindVertexArray(0);
-	}
-	template<typename RectType>
-	requires std::is_arithmetic_v<RectType>
-	void saveRectangleDataAndSendToGpu(const Rectangle<RectType>& rectangle) {
-		usize rectanglevertexamount = static_cast<usize>(RectangleVertex::amount);
-		Mesh meshacquired = saveVerticesAndIndeces<static_cast<usize>(RectangleVertex::amount), 6>(
-			rectangle.getFullVertexData(),
-			{
-				0 + vertex_offset,
-				1 + vertex_offset,
-				3 + vertex_offset,
-				0 + vertex_offset,
-				2 + vertex_offset,
-				3 + vertex_offset
-			} //identical for each rectangle
-		);
-		vertex_offset += static_cast<usize>(RectangleVertex::amount);
-		GpuObject::ElementBufferData newelementbufferdata;
-		newelementbufferdata.element_buffer_size_bytes = 6 * sizeof(u32); // idential for each rectangle
-		newelementbufferdata.element_buffer_offset_bytes = element_buffer.getOffset(meshacquired.element_buffer_handle);
-		sendLastAcquiredDataToGpu();
-		gpu_objects[rectangle.getId()] = { newelementbufferdata, meshacquired };
-
-	}
-	void init_members();
-	void update_vertex_buffer();
-	void update_element_buffer();
+	void init_members(const VertexBufferType& attributepointervertexbuffertype);
 public:
 	Renderer() = default;
 	void init();
+	void init(const VertexBufferType& attributepointervertexbuffertype);
 	void init(Window* window);
+	void init(Window* window, const VertexBufferType& attributepointervertexbuffertype);
 	void bindWindow(Window* window);
 	void clear(const Color& color) const;
 	void update(); //defrag buffer
-	template<typename RectType>
-	requires std::is_arithmetic_v<RectType>
-	void draw(const Rectangle<RectType>& rectangle) {
-		auto it = gpu_objects.find(rectangle.getId());
-		if (it == gpu_objects.end()) {
-			saveRectangleDataAndSendToGpu(rectangle);
-			it = gpu_objects.find(rectangle.getId());
-		}
-		shader_orchestrator.useShaderProgram();
-		glBindVertexArray(vertex_array.getGlVertexArrayId());
-		glDrawElements(
-			GL_TRIANGLES,
-			it->second.element_buffer_data.element_buffer_size_bytes/sizeof(u32), // identical for each rect
-			GL_UNSIGNED_INT,
-			reinterpret_cast<void*>(it->second.element_buffer_data.element_buffer_offset_bytes)
-		); 
+	template<typename RectangleType>
+	requires std::is_arithmetic_v<RectangleType>
+	void draw(
+		Rectangle<RectangleType>& rectangle,
+		const VertexBufferType& vertexbuffertype
+	) {
+		draw_handler.draw(
+			resource_manager,
+			resource_manager.getInitialVertexArrayElementBufferAttributePointerHandle(),
+			rectangle,
+			vertexbuffertype,
+			shader_orchestrator
+		);
+	}
+	template <typename RectangleType>
+	requires std::is_arithmetic_v<RectangleType>
+	void draw(
+		Rectangle<RectangleType>& rectangle,
+		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		const VertexBufferType& vertexbuffertype
+	) {
+		draw_handler.draw(
+			resource_manager,
+			vertexarrayelementbufferattributepointerhandle,
+			rectangle,
+			vertexbuffertype,
+			shader_orchestrator
+		);
 	}
 };

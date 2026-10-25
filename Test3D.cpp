@@ -10,10 +10,10 @@
 GLfloat x = 0;
 GLfloat y = 0;
 GLfloat z = 3;
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback1(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
-void processInput(GLFWwindow* window) {
+void processInput1(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		z += 0.1f;
 	}
@@ -270,9 +270,9 @@ int mains() {
 	}
 	init_everything();
 	glViewport(0, 0, 1000, 1000);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback1);
 	while (!glfwWindowShouldClose(window)) {
-		processInput(window);
+		processInput1(window);
 		glClearColor(
 			0.0f,
 			0.0f,

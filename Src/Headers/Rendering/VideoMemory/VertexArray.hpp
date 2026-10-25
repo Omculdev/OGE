@@ -1,29 +1,38 @@
 #pragma once
-#pragma once
 #include "Calculations/General/Types.hpp"
 #include "Rendering/VideoMemory/VertexBuffer.hpp"
 #include "Rendering/VideoMemory/ElementBuffer.hpp"
+#include "Utils/Rendering/VideoMemory/AttributePointer.hpp"
+#include "Utils/Rendering/VideoMemory/AttributePointerHandle.hpp"
 class VertexArray {
 private:
 	u32 gl_vertex_array_id = {};
-	struct AttributePointer {
-		u32 layout = {};
-		u32 type = {};
-		usize size = {};
-		usize stride = {};
-		usize shift = {};
-		boolean normalized = {};
-	};
 	std::vector<AttributePointer> attribute_pointers = {};
+	std::vector<usize> free_indeces = {};
 	void gen_array();
-	void enable_all_attribute_pointers();
 public:
 	VertexArray() = default;
-	void init();
-	~VertexArray();
 	VertexArray(const VertexArray& other) = delete;
 	VertexArray& operator=(const VertexArray& other) = delete;
-	void addAttributePointer(u32 layout, usize size, u32 type, boolean normalized, usize stride, usize shift);
-	void create(const VertexBuffer& vertexbuffer, const ElementBuffer& elementbuffer, u32 datausage);
+	VertexArray(VertexArray&& other) noexcept;
+	VertexArray& operator=(VertexArray&& other) noexcept;
+	void init();
+	~VertexArray();
+	[[nodiscard]] AttributePointerHandle addAttributePointer(const AttributePointer& attributepointer); // copy intended
+	[[nodiscard]] AttributePointerHandle addAttributePointer(
+		u32 layout, 
+		usize size, 
+		u32 type, 
+		boolean normalized, 
+		usize stride, 
+		usize shift,
+		boolean enabled = true
+	);
+	void deleteAttributePointer(AttributePointerHandle& attributepointerhadnle);
+	void enableAttributePointer(const AttributePointerHandle& attributepointerhandle);
+	void disableAttributePointer(const AttributePointerHandle& attributepointerhandle);
+	void enableAllAttributePointers();
+	void disableAllAttributePointers();
+	void clear();
 	u32 getGlVertexArrayId() const;
 };

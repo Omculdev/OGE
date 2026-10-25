@@ -19,45 +19,41 @@ void Renderer::clear(const Color& color) const {
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 }
-void Renderer::create_vertex_array() {
-	vertex_array.addAttributePointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 0);
-	vertex_array.addAttributePointer(1, 4, GL_FLOAT, GL_FALSE, 3 * sizeof(f32) + 4 * sizeof(f32), 3 * sizeof(f32));
-	vertex_array.create(vertex_buffer, element_buffer, GL_DYNAMIC_DRAW);// change later
-}
-void Renderer::init_members() {
-	vertex_array.init();
-	vertex_buffer.init();
-	element_buffer.init();
+void Renderer::init_members(const VertexBufferType& attributepointervertexbuffertype) {
+	resource_manager.init();
+	// change later - placeholder
+	resource_manager.vertex_array_element_buffer_orchestrator.addAttributePointer(
+		resource_manager.getInitialVertexArrayElementBufferAttributePointerHandle(),
+		resource_manager.vertex_buffer_orchestrator, attributepointervertexbuffertype,
+		0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(f32), 0, true 
+	);
+	resource_manager.vertex_array_element_buffer_orchestrator.addAttributePointer(
+		resource_manager.getInitialVertexArrayElementBufferAttributePointerHandle(),
+		resource_manager.vertex_buffer_orchestrator, attributepointervertexbuffertype,
+		1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(f32), 3 * sizeof(f32), true
+	);
+	// change later - placeholder
 	shader_orchestrator.init();
 }
+void Renderer::init(const VertexBufferType& attributepointervertexbuffertype) {
+	init_members(attributepointervertexbuffertype);
+	shader_orchestrator.setShaderType(ShaderType::no_rotate_2D);  // remove later
+	if (!shader_orchestrator.loadCurrentShaderAndCreateShaderProgram()) {
+		Logger::getInstance().logWarning("Renderer::init: failed to link shader program");
+		return;
+	}
+}
 void Renderer::init() {
-	init_members();
-	vertex_buffer_defragmentation_threshold_bytes = 1024;
-	element_buffer_defragmentation_threshold_bytes = 1024;
-	shader_orchestrator.setShaderType(ShaderType::no_rotate_2D);
-	shader_orchestrator.loadCurrentShaderAndCreateShaderProgram();
-	create_vertex_array();
+	init(VertexBufferType::dynamical);
 }
 void Renderer::init(Window* window) {
 	init();
-	glDisable(GL_DEPTH_TEST);
-	current_window = window;
-	glfwMakeContextCurrent(current_window->getPointer());
-	if (window->depthEnabled()) {
-		glEnable(GL_DEPTH_TEST);
-	}
+	bindWindow(window);
 }
-void Renderer::update_vertex_buffer() {
-	if (vertex_buffer.getBufferSize() - vertex_buffer.getUsedBufferSize() >= vertex_buffer_defragmentation_threshold_bytes) {
-		vertex_buffer.defragmentBuffer();
-	}
-}
-void Renderer::update_element_buffer() {
-	if (element_buffer.getBufferSize() - element_buffer.getUsedBufferSize() >= element_buffer_defragmentation_threshold_bytes) {
-		element_buffer.defragmentBuffer();
-	}
+void Renderer::init(Window* window, const VertexBufferType& attributepointervertexbuffertype) {
+	init(attributepointervertexbuffertype);
+	bindWindow(window);
 }
 void Renderer::update() {
-	update_vertex_buffer();
-	update_element_buffer();
+	resource_manager.update();
 }
