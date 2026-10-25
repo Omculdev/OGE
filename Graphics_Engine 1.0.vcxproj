@@ -465,6 +465,8 @@
     <ClInclude Include="Src\Headers\Calculations\2D\Point2.hpp" />
     <ClInclude Include="Src\Headers\Calculations\2D\Segment2.hpp" />
     <ClInclude Include="Src\Headers\Calculations\2D\Size2.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\General\Matrices\BasicMatrix.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\General\Matrices\Matrix2x2.hpp" />
     <ClInclude Include="Src\Headers\Calculations\General\Types.hpp" />
     <ClInclude Include="Src\Headers\Calculations\2D\Vec2.hpp" />
     <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Rectangle.hpp" />

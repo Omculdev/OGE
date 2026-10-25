@@ -2,8 +2,7 @@
 [[nodiscard]] VertexArrayElementBufferAttributePointerHandle VertexArrayElementBufferOrchestrator::addVertexArrayElementBuffer(
 	usize elementbuffersize,
 	usize elementbufferdefragmentationsize,
-	u32 elementbufferusage,
-	const std::vector<AttributePointer>& attributepointers
+	u32 elementbufferusage
 ) {
 	VertexArrayElementBufferData newvertexarrayelementbufferdata = {};
 	VertexArrayElementBufferAttributePointerHandle newvertexarrayelementbufferattributepointerhandle = {};
@@ -11,11 +10,6 @@
 	glBindVertexArray(newvertexarrayelementbufferdata.vertex_array.getGlVertexArrayId());
 	newvertexarrayelementbufferdata.element_buffer.init(elementbuffersize);
 	newvertexarrayelementbufferdata.element_buffer.allocateGpuMemory(GL_ELEMENT_ARRAY_BUFFER, elementbufferusage);
-	for (usize attributepointerindex = 0; attributepointerindex < attributepointers.size(); attributepointerindex++) {
-		AttributePointer attributepointer = attributepointers[attributepointerindex];
-		AttributePointerHandle attributepointerhandle = newvertexarrayelementbufferdata.vertex_array.addAttributePointer(attributepointer);
-		newvertexarrayelementbufferattributepointerhandle.addAttributePointerHandle(std::move(attributepointerhandle));
-	}
 	glBindVertexArray(0);
 	if (free_indices.empty()) {
 		newvertexarrayelementbufferattributepointerhandle.setVertexArrayElementBufferHandleId(data.size()); // implicitly last index + 1
@@ -32,27 +26,23 @@
 [[nodiscard]] VertexArrayElementBufferAttributePointerHandle VertexArrayElementBufferOrchestrator::init_members(
 	u32 initialelementbufferusage,
 	usize initialelementbuffersizebytes,
-	usize initialelementbufferdefragmentationthresholdbytes,
-	const std::vector<AttributePointer>& attributepointers
+	usize initialelementbufferdefragmentationthresholdbytes
 ) {
 	return addVertexArrayElementBuffer(
 		initialelementbuffersizebytes,
 		initialelementbufferdefragmentationthresholdbytes,
-		initialelementbufferusage,
-		attributepointers
+		initialelementbufferusage
 	);
 }
 [[nodiscard]] VertexArrayElementBufferAttributePointerHandle VertexArrayElementBufferOrchestrator::init(
 	usize initialelementbuffersizebytes,
 	usize initialelementbufferdefragmentationthresholdbytes,
-	u32 initialelementbufferusage,
-	const std::vector<AttributePointer>& attributepointers
+	u32 initialelementbufferusage
 ) {
 	return init_members(
 		initialelementbufferusage,
 		initialelementbuffersizebytes,
-		initialelementbufferdefragmentationthresholdbytes,
-		attributepointers
+		initialelementbufferdefragmentationthresholdbytes
 	);
 }
 VertexArrayElementBufferOrchestrator::VertexArrayElementBufferOrchestrator(VertexArrayElementBufferOrchestrator&& other) noexcept : 
@@ -109,17 +99,31 @@ void VertexArrayElementBufferOrchestrator::disableAllAttributePointers(const Ver
 	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
 	data[id].vertex_array.disableAllAttributePointers();
 }
-void VertexArrayElementBufferOrchestrator::addAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, const AttributePointer& attributepointer) {
+void VertexArrayElementBufferOrchestrator::addAttributePointer(
+	VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, 
+	const VertexBufferOrchestrator& vertexbufferorchestrator,
+	const VertexBufferType& vertexbuffertype,
+	const AttributePointer& attributepointer
+) {
 	if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
 		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::addAttributePointer: attempted to access data via an invalid handle");
 		return;
 	}
+	std::optional<u32> glvertexbufferid = vertexbufferorchestrator.getGlVertexBufferId(vertexbuffertype);
+	if (!glvertexbufferid.has_value()) {
+		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::addAttributePointer: failed to acquire gl vertex buffer id");
+		return;
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, *glvertexbufferid);
 	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
 	AttributePointerHandle newattributepointerhandle = data[id].vertex_array.addAttributePointer(attributepointer);
 	vertexarrayelementbufferattributepointerhandle.addAttributePointerHandle(std::move(newattributepointerhandle));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 void VertexArrayElementBufferOrchestrator::addAttributePointer(
 	VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+	const VertexBufferOrchestrator& vertexbufferorchestrator,
+	const VertexBufferType& vertexbuffertype,
 	u32 layout,
 	usize size,
 	u32 type,
@@ -137,7 +141,7 @@ void VertexArrayElementBufferOrchestrator::addAttributePointer(
 	newattributepointer.shift = shift;
 	newattributepointer.enabled = enabled;
 	newattributepointer.active = true;
-	addAttributePointer(vertexarrayelementbufferattributepointerhandle, newattributepointer);
+	addAttributePointer(vertexarrayelementbufferattributepointerhandle, vertexbufferorchestrator, vertexbuffertype, newattributepointer);
 }
 void VertexArrayElementBufferOrchestrator::deleteAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex) {
 	if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
@@ -166,4 +170,36 @@ void VertexArrayElementBufferOrchestrator::disableAttributePointer(VertexArrayEl
 	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
 	AttributePointerHandle& attributepointerhandle = vertexarrayelementbufferattributepointerhandle.getAttributePointerHandle(handleindex);
 	data[id].vertex_array.disableAttributePointer(attributepointerhandle);
+}
+void VertexArrayElementBufferOrchestrator::deleteElementBufferData(
+	const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+	ElementBufferHandle& elementbufferhandle
+) {
+	if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
+		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::deleteElementBufferData: attempted to access data via an invalid handle");
+		return;
+	}
+	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
+	data[id].element_buffer.deleteElements(elementbufferhandle);
+}
+[[nodiscard]] std::optional<u32> VertexArrayElementBufferOrchestrator::getGlVertexArrayId(
+	const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle
+) const {
+	if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
+		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::getGlVertexArrayId: attempted to access data via an invalid handle");
+		return std::nullopt;
+	}
+	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
+	return data[id].vertex_array.getGlVertexArrayId();
+}
+[[nodiscard]] std::optional<usize> VertexArrayElementBufferOrchestrator::getElementBufferOffset(
+	const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+	const ElementBufferHandle& elementbufferhandle
+) const {
+	if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
+		Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::getElementBufferOffset: attempted to access data via an invalid handle");
+		return std::nullopt;
+	}
+	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
+	return data[id].element_buffer.getOffset(elementbufferhandle);
 }

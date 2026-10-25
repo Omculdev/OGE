@@ -18,10 +18,22 @@ public:
 	Application operator=(Application& other) = delete;
 	boolean addWindow(u32 width, u32 height, const std::string& title, boolean enable_depth = false);
 	boolean addWindow(const UIntSize2& size, const std::string& title, boolean enable_depth = false);
-	template <typename RectType> 
-	requires std::is_arithmetic_v<RectType>
-	void draw(const Rectangle<RectType>& rectangle) {
-		renderer.draw(rectangle);
+	template <typename RectangleType> 
+	requires std::is_arithmetic_v<RectangleType>
+	void draw(
+		Rectangle<RectangleType>& rectangle,
+		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		VertexBufferType vertexbuffertype = VertexBufferType::dynamical
+	) {
+		renderer.draw(rectangle, vertexarrayelementbufferattributepointerhandle, vertexbuffertype);
+	}
+	template <typename RectangleType>
+	requires std::is_arithmetic_v<RectangleType>
+	void draw(
+		Rectangle<RectangleType>& rectangle, 
+		VertexBufferType vertexbuffertype = VertexBufferType::dynamical
+	) {
+		renderer.draw(rectangle, vertexbuffertype);
 	}
 	void switchToWindow(usize index);
 	void clearCurrentWindow(const Color& color = Color(0,0,0,255)) const;

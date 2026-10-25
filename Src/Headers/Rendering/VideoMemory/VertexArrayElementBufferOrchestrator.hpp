@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "Rendering/VideoMemory/VertexBufferOrchestrator.hpp"
 #include "Rendering/VideoMemory/ElementBuffer.hpp"
 #include "Rendering/VideoMemory/VertexArray.hpp"
 #include "Utils/Rendering/VideoMemory/VertexArrayElementBufferAttributePointerHandle.hpp"
@@ -17,8 +18,7 @@ private:
 	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle init_members(
 		u32 initialelementbufferusage,
 		usize initialelementbuffersizebytes,
-		usize initialelementbufferdefragmentationthresholdbytes,
-		const std::vector<AttributePointer>& attributepointers
+		usize initialelementbufferdefragmentationthresholdbytes
 	);
 public:
 	VertexArrayElementBufferOrchestrator() = default;
@@ -29,14 +29,12 @@ public:
 	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle init(
 		usize initialelementbuffersizebytes = 1024 * 1024,
 		usize initialelementbufferdefragmentationthresholdbytesu32 = 800 * 1024,
-		u32 initialelementbufferusage = GL_DYNAMIC_DRAW,
-		const std::vector<AttributePointer>& attributepointers = {}
+		u32 initialelementbufferusage = GL_DYNAMIC_DRAW
 	);
 	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle addVertexArrayElementBuffer(
 		usize elementbuffersize = 1024 * 1024,
 		usize elementbufferdefragmentationsize = 800 * 1024,
-		u32 elementbufferusage = GL_DYNAMIC_DRAW,
-		const std::vector<AttributePointer>& attributepointers = {}
+		u32 elementbufferusage = GL_DYNAMIC_DRAW
 	);
 	template <typename IndexType>
 	[[nodiscard]] std::optional<ElementBufferHandle> saveElementDataAndSendToGpu(
@@ -49,19 +47,30 @@ public:
 			return std::nullopt;
 		}
 		ElementBufferHandle newelementbufferhandle;
-		u32 id = vertexarrayelementbufferattributepointerhandle.vertex_array_element_buffer_handle.getIdValue();
+		u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
 		glBindVertexArray(data[id].vertex_array.getGlVertexArrayId());
 		newelementbufferhandle = data[id].element_buffer.addElements(indeces, active);
 		data[id].element_buffer.sendDataToGpu(newelementbufferhandle, GL_ELEMENT_ARRAY_BUFFER);
 		glBindVertexArray(0);
 		return newelementbufferhandle;
 	}
+	void deleteElementBufferData(
+		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		ElementBufferHandle& elementbufferhandle
+	);
 	void deleteVertexArrayElementBuffer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle);
 	void enableAllAttributePointers(const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle);
 	void disableAllAttributePointers(const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle);
-	void addAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, const AttributePointer& attributepointer);
 	void addAttributePointer(
 		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		const VertexBufferOrchestrator& vertexbufferorchestrator,
+		const VertexBufferType& vertexbuffertype,
+		const AttributePointer& attributepointer
+	);
+	void addAttributePointer(
+		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		const VertexBufferOrchestrator& vertexbufferorchestrator,
+		const VertexBufferType& vertexbuffertype,
 		u32 layout,
 		usize size,
 		u32 type,
@@ -73,5 +82,10 @@ public:
 	void deleteAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex);
 	void enableAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex);
 	void disableAttributePointer(VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle, usize handleindex);
+	[[nodiscard]] std::optional<u32> getGlVertexArrayId(const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle) const;
+	[[nodiscard]] std::optional<usize> getElementBufferOffset(
+		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		const ElementBufferHandle& elementbufferhandle
+	) const;
 	void update();
 };

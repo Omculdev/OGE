@@ -52,3 +52,41 @@ void VertexBufferOrchestrator::updateBuffers() {
 	defragment_buffer_and_send_to_gpu(statical_vertex_buffer, statical_buffer_defragmentation_threshold_bytes);
 	defragment_buffer_and_send_to_gpu(dynamical_vertex_buffer, dynamical_buffer_defragmentation_threshold_bytes);
 }
+void VertexBufferOrchestrator::deleteData(VertexBufferHandle& vertexbufferhandle, const VertexBufferType& vertexbuffertype) {
+	switch (vertexbuffertype) {
+	case VertexBufferType::none:
+	case VertexBufferType::amount:
+		Logger::getInstance().logWarning("VertexBufferOrchestrator::deleteData: invalid vertex buffer type");
+		return;
+	case VertexBufferType::statical:
+		statical_vertex_buffer.deleteElements(vertexbufferhandle);
+		return;
+	case VertexBufferType::dynamical:
+		dynamical_vertex_buffer.deleteElements(vertexbufferhandle);
+		return;
+	}
+}
+[[nodiscard]] std::optional<usize> VertexBufferOrchestrator::getVertexBufferOffset(const VertexBufferHandle& vertexbufferhandle, const VertexBufferType& vertexbuffertype) const {
+	switch (vertexbuffertype) {
+	case VertexBufferType::none:
+	case VertexBufferType::amount:
+		Logger::getInstance().logWarning("VertexBufferOrchestrator::getVertexBufferOffset: invalid vertex buffer type");
+		return std::nullopt;
+	case VertexBufferType::statical:
+		return statical_vertex_buffer.getOffset(vertexbufferhandle);
+	case VertexBufferType::dynamical:
+		return dynamical_vertex_buffer.getOffset(vertexbufferhandle);
+	}
+}
+[[nodiscard]] std::optional<u32> VertexBufferOrchestrator::getGlVertexBufferId(const VertexBufferType& vertexbuffertype) const {
+	switch (vertexbuffertype) {
+	case VertexBufferType::none:
+	case VertexBufferType::amount:
+		Logger::getInstance().logWarning("VertexBufferOrchestrator::getGlVertexBufferId: invalid vertex buffer type");
+		return std::nullopt;
+	case VertexBufferType::statical:
+		return statical_vertex_buffer.getGlBufferId();
+	case VertexBufferType::dynamical:
+		return dynamical_vertex_buffer.getGlBufferId();
+	}
+}

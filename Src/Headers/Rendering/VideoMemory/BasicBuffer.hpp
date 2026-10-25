@@ -153,12 +153,16 @@ public:
 		BufferHandleType newbufferhandle = addBytes(newitemsizebytes, vertices.data(), active);
 		return newbufferhandle;
 	}
-	void deleteElements(BufferHandleType& handle) {
-		if (!allocations[handle.getId()].active) return;
-		allocations[handle.getId()].active = false;
+	void deleteElements(BufferHandleType& bufferhandle) {
+		if (!bufferhandle.getId().has_value()) {
+			Logger::getInstance().logWarning("BasicBuffer::deleteElements: attempted to access data via an invalid handle");
+			return;
+		}
+		if (!allocations[bufferhandle.getIdValue()].active) return;
+		allocations[bufferhandle.getIdValue()].active = false;
 		needs_defragmentation = true;
-		free_indices.push_back(handle.getId());
-		handle.invalidate();
+		free_indices.push_back(bufferhandle.getIdValue());
+		bufferhandle.invalidate();
 	}
 	void allocateGpuMemory(u32 target, u32 usage) const {
 		if (buffer_size_bytes == 0) {
@@ -168,15 +172,23 @@ public:
 		glBindBuffer(target, gl_basic_buffer_id);
 		glBufferData(target, buffer_size_bytes, NULL, usage);
 	}
-	void sendDataToGpu(BufferHandleType bufferhandle, u32 target) {
+	void sendDataToGpu(const BufferHandleType& bufferhandle, u32 target) {
 		glBindBuffer(target, gl_basic_buffer_id);
-		glBufferSubData(target, allocations[bufferhandle.getId()].offset, allocations[bufferhandle.getId()].size, data.get() + allocations[bufferhandle.getId()].offset);
+		if (!bufferhandle.getId().has_value()) {
+			Logger::getInstance().logWarning("BasicBuffer::sendDataToGpu: attempted to access data via an invalid handle");
+			return;
+		}
+		glBufferSubData(target, allocations[bufferhandle.getIdValue()].offset, allocations[bufferhandle.getIdValue()].size, data.get() + allocations[bufferhandle.getIdValue()].offset);
 	}
 	u32 getGlBufferId() const {
 		return gl_basic_buffer_id;
 	}
-	usize getOffset(const BufferHandleType& handle) const {
-		return allocations[handle.getId()].offset;
+	std::optional<usize> getOffset(const BufferHandleType& bufferhandle) const {
+		if (!bufferhandle.getId().has_value()) {
+			Logger::getInstance().logWarning("BasicBuffer::getOffset: attempted to access data via an invalid handle");
+			return std::nullopt;
+		}
+		return allocations[bufferhandle.getIdValue()].offset;
 	}
 	usize getBufferSize() const {
 		return buffer_size_bytes;

@@ -21,8 +21,7 @@ public:
 		u32 dynamicalvertexbufferusage = GL_DYNAMIC_DRAW,
 		usize initialelementbuffersizebytes = 1024 * 1024,
 		usize initialelementbufferdefragmentationthresholdbytes = 800 * 1024,
-		u32 initialelementbufferusage = GL_DYNAMIC_DRAW,
-		const std::vector<AttributePointer>& attributepointers = {}
+		u32 initialelementbufferusage = GL_DYNAMIC_DRAW
 	);
 	template <typename VertexType>
 	[[nodiscard]] std::optional<VertexBufferHandle> saveVertexDataAndSendToGpu(
@@ -31,15 +30,15 @@ public:
 		boolean active = true
 	) {
 		auto newvertexbufferhandle = vertex_buffer_orchestrator.saveVertexDataAndSendToGpu<VertexType>(vertices, vertexbuffertype, active);
-		if (!newvertexbufferhandle.hasValue()) {
+		if (!newvertexbufferhandle.has_value()) {
 			Logger::getInstance().logWarning("ResourceManager::saveVertexDataAndSendToGpu: failed to save vertex bufferdata");
 			return std::nullopt;
 		}
 		return newvertexbufferhandle;
 	}
 	template <typename ElementType>
-	[[nodiscard]] std::optional<ElementBufferHandle> saveElementDataAndSendToGpu(
-		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+	std::optional<ElementBufferHandle> saveElementDataAndSendToGpu(
+		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
 		const std::vector<ElementType>& elements,
 		boolean active = true
 	) {
@@ -66,6 +65,7 @@ public:
 		ResourceHandle newresourcehandle;
 		std::optional<VertexBufferHandle> newvertexbufferhandle = {};
 		std::optional<ElementBufferHandle> newelementbufferhandle = {};
+		newresourcehandle.setVertexBufferType(vertexbuffertype);
 		newvertexbufferhandle = saveVertexDataAndSendToGpu<VertexType>(vertices, vertexbuffertype, vertexbufferactive);
 		if (!newvertexbufferhandle.has_value()) {
 			Logger::getInstance().logWarning("ResourceManager::saveDataAndSendToGpu: failed to save vertex buffer data");
@@ -81,5 +81,11 @@ public:
 		return newresourcehandle;
 	}
 	void update();
+	void deleteData(
+		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		ResourceHandle& resourcehandle,
+		boolean deletevertexbufferdata = true,
+		boolean deleteelementbufferdata = true
+	);
 	[[nodiscard]] VertexArrayElementBufferAttributePointerHandle& getInitialVertexArrayElementBufferAttributePointerHandle();
 };

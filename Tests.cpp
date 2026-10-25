@@ -1,6 +1,7 @@
 #include "Rendering/Application.hpp"
 int main() {
     Application test;
+    auto i = 0;
     test.addWindow(1600, 1080, "darn");
     IntRectangle testrect;
     testrect.setPosition(300, 300);
@@ -18,6 +19,11 @@ int main() {
     testrect2.setSize(700, 700);
     while (!test.currentWindowShouldClose()) {
         test.clearCurrentWindow(0,0,0);
+        i++;
+        std::cout << i << std::endl;
+        if (i > 1000) {
+            testrect2.setPosition(800, 800);
+        }
         test.draw(testrect);
         test.draw(testrect2);
         test.displayCurrentWindow();

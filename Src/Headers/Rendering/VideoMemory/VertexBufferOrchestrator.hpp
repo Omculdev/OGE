@@ -56,5 +56,8 @@ public:
 		}
 		return datahandle;
 	}
+	[[nodiscard]] std::optional<usize> getVertexBufferOffset(const VertexBufferHandle& vertexbufferhandle, const VertexBufferType& vertexbuffertype) const;
+	void deleteData(VertexBufferHandle& vertexbufferhandle, const VertexBufferType& vertexbuffertype);
+	[[nodiscard]] std::optional<u32> getGlVertexBufferId(const VertexBufferType& vertexbuffertype) const;
 	void updateBuffers();
 };

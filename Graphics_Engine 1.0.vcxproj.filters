@@ -364,6 +364,8 @@
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\ResourceHandle.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\AttributePointerHandle.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\VertexArrayElementBufferAttributePointerHandle.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\General\Matrices\Matrix2x2.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\General\Matrices\BasicMatrix.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Graphics_Engine 1.0.slnx" />
