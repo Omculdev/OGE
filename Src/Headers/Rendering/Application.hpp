@@ -1,21 +1,24 @@
 #pragma once
 #include "Rendering/Window.hpp"
 #include "Rendering/Renderer.hpp"
+#include "Systems/Input/Keyboard.hpp"
 #include <type_traits>
+#include <deque>
 class Application {
 private:
-	std::vector<Window> windows = {};
+	std::deque<Window> windows = {};
 	Renderer renderer = {};
 	usize current_window_index = {};
 	boolean first_window_added = {};
 	[[nodiscard]] boolean initGLFW();
 public:
+	Keyboard keyboard = {};
 	Application(); // add more constructors with window params and shader types and dynamic/static draw
 	~Application();
 	Application(const Application& other) = delete;
 	Application& operator=(const Application& other) = delete;
-	Application(Application&& other) = delete;
-	Application operator=(Application& other) = delete;
+	Application(Application&& other) noexcept;
+	Application& operator=(Application&& other) noexcept;
 	boolean addWindow(u32 width, u32 height, const std::string& title, boolean enable_depth = false);
 	boolean addWindow(const UIntSize2& size, const std::string& title, boolean enable_depth = false);
 	template <typename RectangleType> 

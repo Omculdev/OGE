@@ -1,6 +1,23 @@
 #include "Rendering/Shaders/ShaderOrchestator.hpp"
 #include "Utils/General/Logger.hpp"
 #include "Utils/Rendering/Shaders/ShaderLibrary.hpp"
+ShaderOrchestrator::ShaderOrchestrator(ShaderOrchestrator&& other) noexcept :
+	vertex_shader(std::move(other.vertex_shader)),
+	fragment_shader(std::move(other.fragment_shader)),
+	shader_program(std::move(other.shader_program)),
+	shader_type(other.shader_type)
+{
+	other.shader_type = ShaderType::none;
+}
+ShaderOrchestrator& ShaderOrchestrator::operator=(ShaderOrchestrator&& other) noexcept {
+	if (this == &other) return *this;
+	vertex_shader = std::move(other.vertex_shader);
+	fragment_shader = std::move(other.fragment_shader);
+	shader_program = std::move(other.shader_program);
+	shader_type = other.shader_type;
+	other.shader_type = ShaderType::none;
+	return *this;
+}
 void ShaderOrchestrator::init_members() {
 	vertex_shader.init();
 	fragment_shader.init();

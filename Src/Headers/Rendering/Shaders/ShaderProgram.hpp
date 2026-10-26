@@ -6,9 +6,11 @@ private:
 	u32 gl_shader_program_id = {};
 	void gen_program();
 public:
+	ShaderProgram() = default;
 	ShaderProgram(const ShaderProgram& other) = delete;
 	ShaderProgram& operator=(const ShaderProgram& other) = delete;
-	ShaderProgram() = default;
+	ShaderProgram(ShaderProgram&& other) noexcept;
+	ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 	~ShaderProgram();
 	void init();
 	[[nodiscard]] boolean create(VertexShader& vertexshader, FragmentShader& fragmentshader);

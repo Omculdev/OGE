@@ -158,6 +158,7 @@
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\ResourceManager.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexArrayElementBufferOrchestrator.cpp" />
     <ClCompile Include="Src\SourceCode\Rendering\VideoMemory\VertexBufferOrchestrator.cpp" />
+    <ClCompile Include="Src\SourceCode\Systems\Input\Keyboard.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\Rendering\VideoMemory\ResourceHandle.cpp" />
     <ClCompile Include="Src\SourceCode\Utils\Rendering\VideoMemory\VertexArrayElementBufferAttributePointerHandle.cpp" />
     <ClCompile Include="Tests.cpp" />
@@ -483,6 +484,7 @@
     <ClInclude Include="Src\Headers\Rendering\Shaders\ShaderProgram.hpp" />
     <ClInclude Include="Src\Headers\Rendering\Shaders\VertexShader.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\ResourceManager.hpp" />
+    <ClInclude Include="Src\Headers\Systems\Input\Keyboard.hpp" />
     <ClInclude Include="Src\Headers\Utils\Rendering\VideoMemory\AttributePointer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\BasicBuffer.hpp" />
     <ClInclude Include="Src\Headers\Rendering\VideoMemory\ElementBuffer.hpp" />

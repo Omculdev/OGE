@@ -1,6 +1,17 @@
 #include "Rendering/Shaders/ShaderProgram.hpp"
 #include "GLAD/glad.h"
 #include "Utils/General/Logger.hpp"
+ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept :
+	gl_shader_program_id(other.gl_shader_program_id)
+{
+	other.gl_shader_program_id = 0;
+}
+ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept {
+	if (this == &other) return *this;
+	gl_shader_program_id = other.gl_shader_program_id;
+	other.gl_shader_program_id = 0;
+	return *this;
+}
 void ShaderProgram::gen_program() {
 	gl_shader_program_id = glCreateProgram();
 }

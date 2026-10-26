@@ -16,6 +16,8 @@ public:
 	ShaderOrchestrator() = default;
 	ShaderOrchestrator(const ShaderOrchestrator& other) = delete;
 	ShaderOrchestrator& operator=(const ShaderOrchestrator& other) = delete;
+	ShaderOrchestrator(ShaderOrchestrator&& other) noexcept;
+	ShaderOrchestrator& operator=(ShaderOrchestrator&& other) noexcept;
 	void init();
 	void init(const ShaderType& shadertype);
 	[[nodiscard]] boolean setShaderType(const ShaderType& shadertype);

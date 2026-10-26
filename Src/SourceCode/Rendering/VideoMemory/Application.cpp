@@ -16,6 +16,25 @@ Application::Application() {
 Application::~Application() {
 	glfwTerminate();
 }
+Application::Application(Application&& other) noexcept :
+	windows(std::move(other.windows)),
+	renderer(std::move(other.renderer)),
+	current_window_index(other.current_window_index),
+	first_window_added(other.first_window_added)
+{
+	other.current_window_index = 0;
+	other.first_window_added = false;
+}
+Application& Application::operator=(Application&& other) noexcept {
+	if (this == &other) return *this;
+	windows = std::move(other.windows);
+	renderer = std::move(other.renderer);
+	current_window_index = other.current_window_index;
+	first_window_added = other.first_window_added;
+	other.current_window_index = 0;
+	other.first_window_added = false;
+	return *this;
+}
 boolean Application::addWindow(const UIntSize2& size, const std::string& title, boolean enable_depth) {
 	if (first_window_added) {
 		windows.emplace_back(size, title, enable_depth);
@@ -31,6 +50,7 @@ boolean Application::addWindow(const UIntSize2& size, const std::string& title, 
 			Logger::getInstance().logWarning("Application::addWindow: failed to initialize openGL functions");
 			return false;
 		}
+		keyboard.init(&windows[current_window_index]);
 		renderer.init(&windows[current_window_index]);
 		first_window_added = true;
 	}
@@ -47,12 +67,16 @@ void Application::clearCurrentWindow(u8 r, u8 g, u8 b, u8 a) const {
 	clearCurrentWindow(Color(r, g, b, a));
 }
 void Application::displayCurrentWindow() {
+	windows[current_window_index].makeContextCurrent();
 	renderer.update();
 	windows[current_window_index].display();
+	keyboard.update();
 }
 void Application::switchToWindow(usize index) {
-	windows[current_window_index].makeContextCurrent();
 	current_window_index = index;
+	windows[current_window_index].makeContextCurrent();
+	renderer.bindWindow(&windows[current_window_index]);
+	keyboard.bindWindow(&windows[current_window_index]);
 }
 [[nodiscard]] boolean Application::currentWindowShouldClose() const {
 	return windows[current_window_index].shouldClose();

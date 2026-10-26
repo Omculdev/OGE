@@ -14,9 +14,28 @@ private:
 		gl_shader_id = glCreateShader(gl_shader_type);
 	}
 public:
+	BasicShader() = default;
 	BasicShader(const BasicShader& other) = delete;
 	BasicShader& operator=(const BasicShader& other) = delete;
-	BasicShader() = default;
+	BasicShader(BasicShader&& other) noexcept :
+		ready(other.ready),
+		source(other.source),
+		gl_shader_id(other.gl_shader_id)
+	{
+		other.ready = false;
+		other.source = {};
+		other.gl_shader_id = 0;
+	}
+	BasicShader& operator=(BasicShader&& other) noexcept {
+		if (this == &other) return *this;
+		ready = other.ready;
+		source = other.source;
+		gl_shader_id = other.gl_shader_id;
+		other.ready = false;
+		other.source = {};
+		other.gl_shader_id = 0;
+		return *this;
+	}
 	~BasicShader() {
 		if (gl_shader_id == 0) {
 			return;

@@ -16,6 +16,10 @@ private:
 	void init_members(const VertexBufferType& attributepointervertexbuffertype);
 public:
 	Renderer() = default;
+	Renderer(const Renderer& other) = delete;
+	Renderer& operator=(const Renderer& other) = delete;
+	Renderer(Renderer&& other) noexcept;
+	Renderer& operator=(Renderer&& other) noexcept;
 	void init();
 	void init(const VertexBufferType& attributepointervertexbuffertype);
 	void init(Window* window);

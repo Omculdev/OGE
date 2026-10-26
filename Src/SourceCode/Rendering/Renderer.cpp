@@ -1,5 +1,22 @@
 #include <Rendering/Renderer.hpp>
 #include <GLAD/glad.h>
+Renderer::Renderer(Renderer&& other) noexcept :
+	shader_orchestrator(std::move(other.shader_orchestrator)),
+	resource_manager(std::move(other.resource_manager)),
+	draw_handler(std::move(other.draw_handler)),
+	current_window(other.current_window)
+{
+	other.current_window = nullptr;
+}
+Renderer& Renderer::operator=(Renderer&& other) noexcept {
+	if (this == &other) return *this;
+	shader_orchestrator = std::move(other.shader_orchestrator);
+	resource_manager = std::move(other.resource_manager);
+	draw_handler = std::move(other.draw_handler);
+	current_window = other.current_window;
+	other.current_window = nullptr;
+	return *this;
+}
 void Renderer::bindWindow(Window* window) {
 	current_window = window;
 	glfwMakeContextCurrent(current_window->getPointer());

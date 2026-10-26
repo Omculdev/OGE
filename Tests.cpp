@@ -1,10 +1,14 @@
 #include "Rendering/Application.hpp"
+void TROLL(f32& x, f32& y) {
+    x += 1;
+    y += 1;
+}
 int main() {
     Application test;
-    auto i = 0;
+    f32 posx = 0.0;
+    f32 posy = 0.0;
     test.addWindow(1600, 1080, "darn");
     IntRectangle testrect;
-    testrect.setPosition(300, 300);
     testrect.setVertexColor(RectangleVertex::top_left, 255, 0, 0);
     testrect.setVertexColor(RectangleVertex::top_right, 0, 255, 0);
     testrect.setVertexColor(RectangleVertex::bottom_right, 0, 0, 255);
@@ -19,11 +23,8 @@ int main() {
     testrect2.setSize(700, 700);
     while (!test.currentWindowShouldClose()) {
         test.clearCurrentWindow(0,0,0);
-        i++;
-        std::cout << i << std::endl;
-        if (i > 1000) {
-            testrect2.setPosition(800, 800);
-        }
+        test.keyboard.doOnKeyHold(Key::A, TROLL, posx, posy);
+        testrect.setPosition(posx, posy);
         test.draw(testrect);
         test.draw(testrect2);
         test.displayCurrentWindow();
