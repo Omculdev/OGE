@@ -31,7 +31,7 @@ public:
 	DrawHandler(DrawHandler&& other) noexcept;
 	DrawHandler& operator=(DrawHandler&& other) noexcept;
 	template <typename RectangleType>
-		requires std::is_arithmetic_v<RectangleType>
+	requires std::is_arithmetic_v<RectangleType>
 	void saveRectangleDataAndSendToGpu(
 		ResourceManager& resourcemanager,
 		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
@@ -41,7 +41,7 @@ public:
 		ResourceHandle newresourcehandle = {};
 		if (!common_rectangle_element_buffer_allocation.data_saved) {
 			std::vector<u32> indices = { 0, 1, 3, 0, 2, 3 };
-			std::optional<ElementBufferHandle> newelementbufferhandle = resourcemanager.saveElementDataAndSendToGpu<u32>(
+			std::optional<ElementBufferHandle> newelementbufferhandle = resourcemanager.vertex_array_element_buffer_orchestrator.saveElementDataAndSendToGpu<u32>(
 				vertexarrayelementbufferattributepointerhandle,
 				indices,
 				true
@@ -53,10 +53,8 @@ public:
 			common_rectangle_element_buffer_allocation.allocation_handle = std::move(*newelementbufferhandle);
 			common_rectangle_element_buffer_allocation.data_saved = true;
 		}
-		std::array<Vertex, std::to_underlying(RectangleVertex::amount)> rectanglevertices = rectangle.getFullVertexData();
-		std::vector<Vertex> vertices(rectanglevertices.begin(), rectanglevertices.end());
-		std::optional<VertexBufferHandle> newvertexbufferhandle = resourcemanager.saveVertexDataAndSendToGpu<Vertex>(
-			vertices,
+		std::optional<VertexBufferHandle> newvertexbufferhandle = resourcemanager.vertex_buffer_orchestrator.saveVertexDataAndSendToGpu<Vertex>(
+			rectangle.getFullVertexData(),
 			vertexbuffertype,
 			true
 		);
@@ -87,7 +85,26 @@ public:
 		}
 	}
 	template <typename RectangleType>
-		requires std::is_arithmetic_v<RectangleType>
+	requires std::is_arithmetic_v<RectangleType>
+	void updateRectangleDataAndSendToGpu(
+		ResourceManager& resourcemanager,
+		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		Rectangle<RectangleType>& rectangle
+	) {
+		if (!rectangle.getDrawId().has_value()) {
+			Logger::getInstance().logWarning("DrawHandler::updateRectangleDataAndSendToGpu: attempted to update an invalid drawable");
+			return;
+		}
+		ResourceHandle& resourcehandle = drawable_item_resource_handles[rectangle.getDrawIdValue()];
+		resourcemanager.vertex_buffer_orchestrator.updateVertexDataAndSendToGpu<Vertex>(
+			resourcehandle.getVertexBufferHandle(),
+			rectangle.getFullVertexData(),
+			resourcehandle.getVertexBufferType(),
+			true
+		);
+	}
+	template <typename RectangleType>
+	requires std::is_arithmetic_v<RectangleType>
 	void deleteDrawable(
 		ResourceManager& resourcemanager,
 		VertexArrayElementBufferAttributePointerHandle& vertexarrayattributepointerhandle,
@@ -112,7 +129,7 @@ public:
 		const VertexBufferType& vertexbuffertype,
 		const ShaderOrchestrator& shaderorchestrator
 	) {
-		if (!rectangle.getDrawId().has_value() || !rectangle.isClean()) {
+		if (!rectangle.getDrawId().has_value()) {
 			saveRectangleDataAndSendToGpu<RectangleType>(
 				resourcemanager,
 				vertexarrayelementbufferattributepointerhandle,
@@ -120,6 +137,13 @@ public:
 				vertexbuffertype
 			);
 			rectangle.setClean();
+		}
+		else if (!rectangle.isClean()) {
+			updateRectangleDataAndSendToGpu<RectangleType>(
+				resourcemanager,
+				vertexarrayelementbufferattributepointerhandle,
+				rectangle
+			);
 		}
 		if (!rectangle.getDrawId().has_value()) {
 			Logger::getInstance().logWarning("DrawHandler::draw: failed to save rectangle data");

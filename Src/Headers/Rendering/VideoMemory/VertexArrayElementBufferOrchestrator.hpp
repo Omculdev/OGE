@@ -39,20 +39,37 @@ public:
 	template <typename IndexType>
 	[[nodiscard]] std::optional<ElementBufferHandle> saveElementDataAndSendToGpu(
 		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
-		const std::vector<IndexType>& indeces,
+		std::span<const IndexType> indices,
 		boolean active = true
 	) {
 		if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
-			Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::saveElementDataAndSendToGpu: attempted to send data to using an invalid handle");
+			Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::saveElementDataAndSendToGpu: attempted to save data to using an invalid handle");
 			return std::nullopt;
 		}
 		ElementBufferHandle newelementbufferhandle;
 		u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
 		glBindVertexArray(data[id].vertex_array.getGlVertexArrayId());
-		newelementbufferhandle = data[id].element_buffer.addElements(indeces, active);
+		newelementbufferhandle = data[id].element_buffer.addData<IndexType>(indices, active);
 		data[id].element_buffer.sendDataToGpu(newelementbufferhandle, GL_ELEMENT_ARRAY_BUFFER);
 		glBindVertexArray(0);
 		return newelementbufferhandle;
+	}
+	template <typename IndexType>
+	void updateElementDataAndSendToGpu(
+		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
+		ElementBufferHandle& elementbufferhandle,
+		std::span<const IndexType> newindices,
+		boolean active = true
+	) {
+		if (!vertexarrayelementbufferattributepointerhandle.isVertexArrayElementBufferHandleValid()) {
+			Logger::getInstance().logWarning("VertexArrayElementBufferOrchestrator::updateElementDataAndSendToGpu: attempted to update data to using an invalid handle");
+			return;
+		}
+		u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
+		glBindVertexArray(data[id].vertex_array.getGlVertexArrayId());
+		data[id].element_buffer.updateData<IndexType>(elementbufferhandle, newindices, active);
+		data[id].element_buffer.sendDataToGpu(elementbufferhandle, GL_ELEMENT_ARRAY_BUFFER);
+		glBindVertexArray(0);
 	}
 	void deleteElementBufferData(
 		const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,

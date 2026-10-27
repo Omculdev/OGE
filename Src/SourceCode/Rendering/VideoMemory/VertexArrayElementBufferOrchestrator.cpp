@@ -180,7 +180,7 @@ void VertexArrayElementBufferOrchestrator::deleteElementBufferData(
 		return;
 	}
 	u32 id = vertexarrayelementbufferattributepointerhandle.getVertexArrayElementBufferHandleIdValue();
-	data[id].element_buffer.deleteElements(elementbufferhandle);
+	data[id].element_buffer.deleteData(elementbufferhandle);
 }
 [[nodiscard]] std::optional<u32> VertexArrayElementBufferOrchestrator::getGlVertexArrayId(
 	const VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle

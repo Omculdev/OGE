@@ -31,9 +31,9 @@ public:
 		u32 staticalbufferusage = GL_STATIC_DRAW,
 		u32 dynamicalbufferusage = GL_DYNAMIC_DRAW
 	);
-	template <typename DataType>
+	template <typename VertexType>
 	[[nodiscard]] std::optional<VertexBufferHandle> saveVertexDataAndSendToGpu(
-		const std::vector<DataType>& data,
+		std::span<const VertexType> vertices,
 		const VertexBufferType& vertexbuffertype = VertexBufferType::dynamical,
 		boolean active = true
 	) {
@@ -41,20 +41,42 @@ public:
 		switch (vertexbuffertype) {
 		case VertexBufferType::none:
 		case VertexBufferType::amount:
-			Logger::getInstance().logWarning("VertexBufferOrchestrator::saveData: invalid vertex buffer type");
+			Logger::getInstance().logWarning("VertexBufferOrchestrator::saveVertexDataAndSendToGpu: invalid vertex buffer type");
 			return std::nullopt;
 		case VertexBufferType::statical:
-			datahandle = statical_vertex_buffer.addElements<DataType>(data, active);
+			datahandle = statical_vertex_buffer.addData<VertexType>(vertices, active);
 			statical_vertex_buffer.sendDataToGpu(datahandle, GL_ARRAY_BUFFER);
 			break;
 		case VertexBufferType::dynamical:
-			datahandle = dynamical_vertex_buffer.addElements<DataType>(data, active);
+			datahandle = dynamical_vertex_buffer.addData<VertexType>(vertices, active);
 			dynamical_vertex_buffer.sendDataToGpu(datahandle, GL_ARRAY_BUFFER);
 			break;
 		default:
 			return std::nullopt;
 		}
 		return datahandle;
+	}
+	template <typename VertexType>
+	void updateVertexDataAndSendToGpu(
+		VertexBufferHandle& vertexbufferhandle,
+		std::span<const VertexType> newvertices,
+		const VertexBufferType& vertexbuffertype = VertexBufferType::dynamical,
+		boolean active = true
+	) {
+		switch (vertexbuffertype) {
+		case VertexBufferType::none:
+		case VertexBufferType::amount:
+			Logger::getInstance().logWarning("VertexBufferOrchestrator::updateVertexDataAndSendToGpu: invalid vertex buffer type");
+			return;
+		case VertexBufferType::statical:
+			statical_vertex_buffer.updateData<VertexType>(vertexbufferhandle, newvertices, active);
+			statical_vertex_buffer.sendDataToGpu(vertexbufferhandle, GL_ARRAY_BUFFER);
+			break;
+		case VertexBufferType::dynamical:
+			dynamical_vertex_buffer.updateData<VertexType>(vertexbufferhandle, newvertices, active);
+			dynamical_vertex_buffer.sendDataToGpu(vertexbufferhandle, GL_ARRAY_BUFFER);
+			break;
+		}
 	}
 	[[nodiscard]] std::optional<usize> getVertexBufferOffset(const VertexBufferHandle& vertexbufferhandle, const VertexBufferType& vertexbuffertype) const;
 	void deleteData(VertexBufferHandle& vertexbufferhandle, const VertexBufferType& vertexbuffertype);

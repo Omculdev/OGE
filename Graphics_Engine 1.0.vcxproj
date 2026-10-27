@@ -469,9 +469,9 @@
     <ClInclude Include="Src\Headers\Calculations\General\Matrices\BasicMatrix.hpp" />
     <ClInclude Include="Src\Headers\Calculations\General\Matrices\Matrix2x2.hpp" />
     <ClInclude Include="Src\Headers\Calculations\General\Types.hpp" />
-    <ClInclude Include="Src\Headers\Calculations\2D\Vec2.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\2D\Vector2.hpp" />
     <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Rectangle.hpp" />
-    <ClInclude Include="Src\Headers\Calculations\3D\Vec3.hpp" />
+    <ClInclude Include="Src\Headers\Calculations\3D\Vector3.hpp" />
     <ClInclude Include="Src\Headers\Graphics\2D\Drawable\Shape2D.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Rectangle.hpp" />
     <ClInclude Include="Src\Headers\Graphics\Calculations\Colors.hpp" />

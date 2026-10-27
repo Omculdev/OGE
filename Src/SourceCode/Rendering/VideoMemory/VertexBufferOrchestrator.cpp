@@ -59,10 +59,10 @@ void VertexBufferOrchestrator::deleteData(VertexBufferHandle& vertexbufferhandle
 		Logger::getInstance().logWarning("VertexBufferOrchestrator::deleteData: invalid vertex buffer type");
 		return;
 	case VertexBufferType::statical:
-		statical_vertex_buffer.deleteElements(vertexbufferhandle);
+		statical_vertex_buffer.deleteData(vertexbufferhandle);
 		return;
 	case VertexBufferType::dynamical:
-		dynamical_vertex_buffer.deleteElements(vertexbufferhandle);
+		dynamical_vertex_buffer.deleteData(vertexbufferhandle);
 		return;
 	}
 }

@@ -5,9 +5,9 @@
 #include <type_traits>
 #include <cmath>
 #include <optional>
-template <typename Vec2Type>
-requires std::is_arithmetic_v<Vec2Type>
-class Vec2;
+template <typename Vector2Type>
+requires std::is_arithmetic_v<Vector2Type>
+class Vector2;
 template <typename Type>
 requires std::is_arithmetic_v<Type>
 class Point2 {
@@ -22,14 +22,14 @@ public:
 	~Point2() = default;
 	Point2(Type x, Type y) : x(x), y(y) {}
 	explicit Point2(Type value) : x(value), y(value) {}
-	Point2<Type> operator+(const Vec2<Type>& vec2) const {
+	Point2<Type> operator+(const Vector2<Type>& vec2) const {
 		return Point2<Type>(x + vec2.x, y + vec2.y);
 	}
-	Point2<Type> operator-(const Vec2<Type>& vec2) const {
+	Point2<Type> operator-(const Vector2<Type>& vec2) const {
 		return Point2<Type>(x - vec2.x, y - vec2.y);
 	}
-	Vec2<Type> operator-(const Point2<Type>& point2) const {
-		return Vec2<Type>(x - point2.x, y - point2.y);
+	Vector2<Type> operator-(const Point2<Type>& point2) const {
+		return Vector2<Type>(x - point2.x, y - point2.y);
 	}
 	auto operator<=>(const Point2<Type>& other) const = default;
 };

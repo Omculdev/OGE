@@ -5,9 +5,9 @@
 #include <type_traits>
 #include <cmath>
 #include <optional>
-template <typename Vec2Type>
-requires std::is_arithmetic_v<Vec2Type>
-class Vec2;
+template <typename Vector2Type>
+requires std::is_arithmetic_v<Vector2Type>
+class Vector2;
 template <typename Point2Type>
 requires std::is_arithmetic_v<Point2Type>
 class Point2;
@@ -174,10 +174,10 @@ public:
 		return ((end.x - start.x) * (end.x - start.x)) + ((end.y - start.y) * (end.y - start.y));
 	}
 	boolean contains(const Point2<Type>& point, Type epsilon = 1e-12) const {
-		Vec2<Type> SE(start, end);
-		Vec2<Type> SP(start, point);
-		f64 crossproduct = Vec2<Type>::crossProduct(SE, SP);
-		f64 dotproduct = Vec2<Type>::dotProduct(SE, SP);
+		Vector2<Type> SE(start, end);
+		Vector2<Type> SP(start, point);
+		f64 crossproduct = Vector2<Type>::crossProduct(SE, SP);
+		f64 dotproduct = Vector2<Type>::dotProduct(SE, SP);
 		if (std::abs(crossproduct) <= epsilon && dotproduct >= 0 && dotproduct <= lengthSquared()) {
 			return true;
 		}

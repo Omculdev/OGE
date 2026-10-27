@@ -7,6 +7,7 @@
 #include <cassert>
 #include <GLAD/glad.h>
 #include <iostream>
+#include <span>
 template <typename BufferHandleType>
 requires IsBufferHandle<BufferHandleType>
 class BasicBuffer {
@@ -126,13 +127,13 @@ public:
 		glBindBuffer(target, gl_basic_buffer_id);
 		glBufferSubData(target, 0, used_size_bytes, data.get());
 	}
-	[[nodiscard]] BufferHandleType addBytes(usize size, const void* vertices, boolean active = true) {
-		assert(used_size_bytes + size <= buffer_size_bytes, "BasicBuffer::addElements: exceeded maximum buffer size");
+	[[nodiscard]] BufferHandleType addBytes(usize size, const void* bufferdata, boolean active = true) {
+		assert(used_size_bytes + size <= buffer_size_bytes, "BasicBuffer::addData: exceeded maximum buffer size");
 		Allocation newallocation = {};
 		newallocation.size = size;
 		newallocation.active = active;
 		newallocation.offset = used_size_bytes;
-		memcpy(data.get() + newallocation.offset, vertices, size);
+		memcpy(data.get() + newallocation.offset, bufferdata, size);
 		used_size_bytes += newallocation.size;
 		BufferHandleType newallocationhandle = {};
 		if (free_indices.empty()) {
@@ -147,15 +148,13 @@ public:
 		}
 		return newallocationhandle;
 	}
-	template <typename ElementType>
-	[[nodiscard]] BufferHandleType addElements(const std::vector<ElementType>& vertices, boolean active = true) {
-		usize newitemsizebytes = vertices.size() * sizeof(ElementType);
-		BufferHandleType newbufferhandle = addBytes(newitemsizebytes, vertices.data(), active);
-		return newbufferhandle;
+	template <typename DataType>
+	[[nodiscard]] BufferHandleType addData(std::span<const DataType> bufferdata, boolean active = true) {
+		return addBytes(bufferdata.size_bytes(), bufferdata.data(), active);
 	}
-	void deleteElements(BufferHandleType& bufferhandle) {
+	void deleteData(BufferHandleType& bufferhandle) {
 		if (!bufferhandle.getId().has_value()) {
-			Logger::getInstance().logWarning("BasicBuffer::deleteElements: attempted to access data via an invalid handle");
+			Logger::getInstance().logWarning("BasicBuffer::deleteData: attempted to access data via an invalid handle");
 			return;
 		}
 		if (!allocations[bufferhandle.getIdValue()].active) return;
@@ -163,6 +162,26 @@ public:
 		needs_defragmentation = true;
 		free_indices.push_back(bufferhandle.getIdValue());
 		bufferhandle.invalidate();
+	}
+	void updateBytes(BufferHandleType& bufferhandle, usize size, const void* bufferdata, boolean active = true) {
+		std::optional<u32> allocationindex = bufferhandle.getId();
+		if (!allocationindex.has_value()) {
+			Logger::getInstance().logWarning("BasicBuffer::updateBytes: attempted to update bytes via an invalid handle");
+			return;
+		}
+		if (size > allocations[*allocationindex].size) {
+			BufferHandleType newbufferhandle = addBytes(size, bufferdata, active);
+			deleteData(bufferhandle);
+			bufferhandle = std::move(newbufferhandle);
+		}
+		else {
+			memcpy(data.get() + allocations[*allocationindex].offset, bufferdata, size);
+			allocations[*allocationindex].active = active;
+		}
+	}
+	template <typename DataType>
+	void updateData(BufferHandleType& bufferhandle, std::span<const DataType> bufferdata, boolean active = true) {
+		updateBytes(bufferhandle, bufferdata.size_bytes(), bufferdata.data(), active);
 	}
 	void allocateGpuMemory(u32 target, u32 usage) const {
 		if (buffer_size_bytes == 0) {

@@ -23,36 +23,6 @@ public:
 		usize initialelementbufferdefragmentationthresholdbytes = 800 * 1024,
 		u32 initialelementbufferusage = GL_DYNAMIC_DRAW
 	);
-	template <typename VertexType>
-	[[nodiscard]] std::optional<VertexBufferHandle> saveVertexDataAndSendToGpu(
-		const std::vector<VertexType>& vertices,
-		const VertexBufferType vertexbuffertype = VertexBufferType::dynamical,
-		boolean active = true
-	) {
-		auto newvertexbufferhandle = vertex_buffer_orchestrator.saveVertexDataAndSendToGpu<VertexType>(vertices, vertexbuffertype, active);
-		if (!newvertexbufferhandle.has_value()) {
-			Logger::getInstance().logWarning("ResourceManager::saveVertexDataAndSendToGpu: failed to save vertex bufferdata");
-			return std::nullopt;
-		}
-		return newvertexbufferhandle;
-	}
-	template <typename ElementType>
-	std::optional<ElementBufferHandle> saveElementDataAndSendToGpu(
-		VertexArrayElementBufferAttributePointerHandle& vertexarrayelementbufferattributepointerhandle,
-		const std::vector<ElementType>& elements,
-		boolean active = true
-	) {
-		std::optional<ElementBufferHandle> newelementbufferhandle = vertex_array_element_buffer_orchestrator.saveElementDataAndSendToGpu<u32>(
-			vertexarrayelementbufferattributepointerhandle,
-			elements,
-			active
-		);
-		if (!newelementbufferhandle.has_value()) {
-			Logger::getInstance().logWarning("ResourceManager::saveElementDataAndSendToGpu: failed to save element buffer data");
-			return std::nullopt;
-		}
-		return newelementbufferhandle;
-	}
 	template <typename VertexType, typename ElementType>
 	[[nodiscard]] std::optional<ResourceHandle> saveDataAndSendToGpu(
 		const std::vector<VertexType>& vertices,
